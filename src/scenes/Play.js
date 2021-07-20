@@ -9,7 +9,7 @@ class Play extends Phaser.Scene {
 
     create() {
         console.log("entered the Play.js scene");
-        this.menuSprite = this.add.sprite(0, 0, "menu_image").setOrigin(0, 0);
+        this.menuSprite = this.add.sprite(0, 0, "play_image").setOrigin(0, 0);
     }
 
     update(time, delta) {
