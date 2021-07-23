@@ -13,10 +13,10 @@ class Menu extends Phaser.Scene {
 
     create() {
         console.log("entered the Menu.js scene");
-        this.menuSprite = this.add.sprite(0, 0, "menu_image").setOrigin(0, 0);
+        this.bgSprite = this.add.sprite(0, 0, "menu_image").setOrigin(0, 0);
 
         //its cursed but you have to use this.scene.scene.start() >:O https://stackoverflow.com/questions/55264077/phaser-3-clickable-sprite-cant-start-scene
-        this.startButton = new Button(this, "play", 200, 150, function(){this.scene.scene.start("Play");});
+        this.startButton = new Button(this, "play", 200, 450, this.funct = function(){this.scene.start("Play");});
     }
 
     update(time, delta) {
