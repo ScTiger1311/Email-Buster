@@ -7,7 +7,7 @@ let config =
     zoom: 1,
     antialias: false,
     pixelArt: true,
-    scene: [Menu, Play],
+    scene: [Menu, Play, Pixelroom], //if you plan on using more scenes than are already here, make sure you add the name of the scene to this list.
     physics:{
         default: 'arcade',
         arcade: {

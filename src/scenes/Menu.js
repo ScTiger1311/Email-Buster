@@ -16,7 +16,7 @@ class Menu extends Phaser.Scene {
         this.bgSprite = this.add.sprite(0, 0, "menu_image").setOrigin(0, 0);
 
         //its cursed but you have to use this.scene.scene.start() >:O https://stackoverflow.com/questions/55264077/phaser-3-clickable-sprite-cant-start-scene
-        this.startButton = new Button(this, "play", 200, 450, this.funct = function(){this.scene.start("Play");});
+        this.startButton = new Button(this, "play", 200, 450, this.funct = function(){this.scene.start("Pixelroom");});
     }
 
     update(time, delta) {
