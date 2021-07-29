@@ -13,7 +13,17 @@ class Play extends Phaser.Scene {
 
     create() {
         console.log("entered the Play.js scene");
-        this.newBg("Mail1_Real");
+        this.mailReal = //stores all the real mail objects (see Mail.js for a description of the data type)
+        [
+            new Mail("./assets/single_sprites/Mail1_Real.png", true,  true, true, false, false),
+        ];
+        this.mailFake = //stores all the fake mail objects
+        [
+            new Mail("./assets/single_sprites/Mail1_Fake.png", true,  true, true, false, false),
+        ];
+
+        this.useMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
+        this.usedMailFake = []; //stores all of the used fake mail in the current game session, so that repeat mail will not occur
     }
 
     update(time, delta) {
@@ -24,5 +34,29 @@ class Play extends Phaser.Scene {
     {
         this.bgSprite = this.add.sprite(0, 0, image).setOrigin(0, 0);
         this.nextButton = new Button(this, "button", 1000, 700, this.funct = function(){this.newBg("Mail1_Fake");});
+    }
+
+    chooseNewMail()
+    {
+        let randNum = Math.random * 100;
+        let fakeMaxVal = 10; //determines the % chance of a fake mail
+        if(randNum <= fakeMaxVal) //give an unused scam email
+        {
+            let randomToCheck = Math.floor(Math.Random() * this.mailFake.length);
+            for(let i = 0; i < this.mailFake.length; i++)
+            {
+                
+            }
+        }
+        else //give an unused legitimate email
+        {
+
+        }
+    }
+
+    displayNewMail(mail)
+    {
+        this.load.image( "mailCurr", mail.imagePath );
+        this.bgSprite = this.add.sprite(0, 0, "mailCurr");
     }
 }
