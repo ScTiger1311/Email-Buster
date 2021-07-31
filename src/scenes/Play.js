@@ -13,16 +13,16 @@ class Play extends Phaser.Scene {
 
     create() {
         console.log("entered the Play.js scene");
-        this.mailReal = //stores all the real mail objects (see Mail.js for a description of the data type)
+        this.unusedMailReal = //stores all the real mail objects (see Mail.js for a description of the data type)
         [
-            new Mail("./assets/single_sprites/Mail1_Real.png", true,  true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,  true, true, false, false),
         ];
-        this.mailFake = //stores all the fake mail objects
+        this.unusedMailFake = //stores all the fake mail objects
         [
-            new Mail("./assets/single_sprites/Mail1_Fake.png", true,  true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Fake.png", false,  true, true, false, false),
         ];
 
-        this.useMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
+        this.usedMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
         this.usedMailFake = []; //stores all of the used fake mail in the current game session, so that repeat mail will not occur
     }
 
@@ -40,17 +40,50 @@ class Play extends Phaser.Scene {
     {
         let randNum = Math.random * 100;
         let fakeMaxVal = 10; //determines the % chance of a fake mail
-        if(randNum <= fakeMaxVal) //give an unused scam email
+        if(randNum <= fakeMaxVal) //give an unused scam email, then moves that to the used mail
         {
-            let randomToCheck = Math.floor(Math.Random() * this.mailFake.length);
-            for(let i = 0; i < this.mailFake.length; i++)
+            if(this.unusedMailFake.length < 0) //check to make sure there's at least one element
             {
-                
+                let randomToCheck = Math.floor(Math.Random() * this.mailFake.length);
+                let randomMail = unusedMailFake.splice(randomToCheck, 1);
+                this.usedMailFake.push(randomMail);
+                return randomMail;
             }
+            else //move all the elements from used array to unused array
+            {
+                console.log("Play.js -> chooseNewMail() -- Ran else(), fake")
+                for(i = 0; i < this.usedMailFake.length; i++)
+                {
+                    this.unusedMailFake.push(this.usedMailFake.splice(i, 1));
+                }
+                let randomToCheck = Math.floor(Math.Random() * this.unusedMailFake.length);
+                let randomMail = unusedMailFake.splice(randomToCheck, 1);
+                this.usedMailFake.push(randomMail);
+                return randomMail;
+            }
+            
         }
-        else //give an unused legitimate email
+        else //give an unused legitimate email, then moves that to the used mail
         {
-
+            if(this.unusedMailReal.length < 0) //check to make sure there's at least one element
+            {
+                let randomToCheck = Math.floor(Math.Random() * this.mailReal.length);
+                let randomMail = unusedMailReal.splice(randomToCheck, 1);
+                this.usedMailReal.push(randomMail);
+                return randomMail;
+            }
+            else //move all the elements from used array to unused array
+            {
+                console.log("Play.js -> chooseNewMail() -- Ran else(), real")
+                for(i = 0; i < this.usedMailReal.length; i++)
+                {
+                    this.unusedMailReal.push(this.usedMailReal.splice(i, 1));
+                }
+                let randomToCheck = Math.floor(Math.Random() * this.unusedMailReal.length);
+                let randomMail = unusedMailReal.splice(randomToCheck, 1);
+                this.usedMailReal.push(randomMail);
+                return randomMail;
+            }
         }
     }
 
