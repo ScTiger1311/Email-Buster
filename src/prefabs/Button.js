@@ -3,7 +3,7 @@ class Button extends Phaser.GameObjects.Sprite {
     //you must load the atlas. for example
     //      this.load.atlas("play", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json");
     //in order to use it to go to another scene
-    //      this.startButton = new Button(this, "play", 200, 450, function(){this.scene.scene.start("Play");});
+    //      this.startButton = new Button(this, "play", 200, 450, function(){this.scene.start("Play");});
     constructor(scene_, atlas, x, y, funct) {
         super(scene_, atlas, x, y);
         this.scene_ = scene_

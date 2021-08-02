@@ -9,4 +9,9 @@ class Mail extends Phaser.GameObjects.Sprite {
         this.reason3 = reason3;
         this.reason4 = reason4;
     }
+
+    toString()
+    {
+        return("Mail Object");
+    }
 }

@@ -3,12 +3,14 @@ class Pixelroom extends Phaser.Scene {
         super("Pixelroom");
     }
 
+    //if you plan on using assets, you can load them here to load it at the start of the scene. Or, you can load them on the fly.
     preload() {
         this.load.image("PixelroomBG", "./assets/single_sprites/Pixel_Room_BG.png");
         this.load.image("Figure", "./assets/single_sprites/Figure.png");
         this.load.image("Arrow", "./assets/single_sprites/Arrow.png");
     }
 
+    //runs once, after preload, just as the scene starts
     create() {
         console.log("entered the Pixelroom.js scene");
         this.playerScale = 15; //the scale of the player sprite

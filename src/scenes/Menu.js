@@ -3,6 +3,7 @@ class Menu extends Phaser.Scene {
         super("Menu");
     }
 
+    //if you plan on using assets, you can load them here to load it at the start of the scene. Or, you can load them on the fly.
     preload() {
         this.load.image("menu_image", "./assets/single_sprites/Menu.png");
 
@@ -11,6 +12,7 @@ class Menu extends Phaser.Scene {
 
     }
 
+    //runs once, after preload, just as the scene starts
     create() {
         console.log("entered the Menu.js scene");
         this.bgSprite = this.add.sprite(0, 0, "menu_image").setOrigin(0, 0);
