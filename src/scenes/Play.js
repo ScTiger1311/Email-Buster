@@ -3,10 +3,8 @@ class Play extends Phaser.Scene {
         super("Play");
     }
 
-    //if you plan on using assets, you can load them here to load it at the start of the scene. Or, you can load them on the fly.
+    //if you plan on using assets, you can load them here to load it at the start of the scene. Or, you can load them on the fly. https://rexrainbow.github.io/phaser3-rex-notes/docs/site/loader/
     preload() {
-        this.load.image("Mail1_Real", "./assets/single_sprites/Mail1_Real.png");
-        this.load.image("Mail1_Fake", "./assets/single_sprites/Mail1_Fake.png");
         this.load.atlas("clearbutton_red", "./assets/spritesheets/clearbutton_red.png", "./assets/spritesheets/clearbutton_red.json"); //this one is used for testing/debugging purposes
         this.load.atlas("clearbutton", "./assets/spritesheets/clearbutton.png", "./assets/spritesheets/clearbutton.json"); //this one is used as an invisible hitbox
         this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as an actual button
@@ -17,11 +15,11 @@ class Play extends Phaser.Scene {
         console.log("entered the Play.js scene");
         this.unusedMailReal = //stores all the real mail objects (see Mail.js for a description of the data type)
         [
-            new Mail(this, "./assets/single_sprites/Mail1_Real1.png", true,  true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real2.png", true,  true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real3.png", true,  true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real4.png", true,  true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real5.png", true,  true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,  true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,  true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,  true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,  true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,  true, true, false, false),
         ];
         this.unusedMailFake = //stores all the fake mail objects
         [
@@ -34,9 +32,10 @@ class Play extends Phaser.Scene {
             
         ];
 
+        this.bgSprite = 0; //placeholder to give this a value that exists, but isn't a gameobject.
         this.usedMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
         this.usedMailFake = []; //stores all of the used fake mail in the current game session, so that repeat mail will not occur
-        this.nextButton = new Button(this, "button", 1000, 700, this.funct = function(){console.log("Imagepath: " + this.chooseNewMail().imagePath)});
+        this.displayNewMail(this.chooseNewMail());//loads the initial email
     }
 
     update(time, delta) {
@@ -98,9 +97,20 @@ class Play extends Phaser.Scene {
         return randomMail[0];
     }
 
-    displayNewMail(mail)
+    displayNewMail(mail) //the code that loads/unloads images, and sets up the new email.
     {
-        this.load.image( "mailCurr", mail.imagePath );
-        this.bgSprite = this.add.sprite(0, 0, "mailCurr");
+        console.log(mail.imagePath);
+        this.load.image(mail.imagePath, mail.imagePath); //uses the URL as a key
+        if(this.bgSprite != 0 )
+        {
+            this.bgSprite.destroy();
+        }
+        this.load.on(Phaser.Loader.Events.COMPLETE, () => 
+        {
+            this.bgSprite = this.add.sprite(0, 0, mail.imagePath).setOrigin(0,0);
+            this.nextButton = new Button(this, "button", 1000, 700, this.funct = function(){this.displayNewMail(this.chooseNewMail())});
+        });
+        this.load.start();
+        
     }
 }
