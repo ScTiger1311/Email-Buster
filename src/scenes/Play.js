@@ -8,6 +8,7 @@ class Play extends Phaser.Scene {
         this.load.atlas("clearbutton_red", "./assets/spritesheets/clearbutton_red.png", "./assets/spritesheets/clearbutton_red.json"); //this one is used for testing/debugging purposes
         this.load.atlas("clearbutton", "./assets/spritesheets/clearbutton.png", "./assets/spritesheets/clearbutton.json"); //this one is used as an invisible hitbox
         this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as an actual button
+        this.load.image("MailBG", "./assets/single_sprites/MailBG.png"); //used as a background for the game
     }
 
     //runs once, after preload, just as the scene starts
@@ -32,7 +33,9 @@ class Play extends Phaser.Scene {
             
         ];
 
-        this.bgSprite = 0; //placeholder to give this a value that exists, but isn't a gameobject.
+        this.mailSprite = 0; //placeholder to give this a value that exists, but isn't a gameobject.
+        this.nextButton = 0;
+        this.bgSprite = this.add.sprite(0,0, "MailBG").setOrigin(0,0);
         this.usedMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
         this.usedMailFake = []; //stores all of the used fake mail in the current game session, so that repeat mail will not occur
         this.displayNewMail(this.chooseNewMail());//loads the initial email
@@ -40,12 +43,6 @@ class Play extends Phaser.Scene {
 
     update(time, delta) {
         let deltaMultiplier = (delta / 16.66667); //for refresh rate indepence
-    }
-
-    newBg(image) //takes a new background image as a string and applies it
-    {
-        this.bgSprite = this.add.sprite(0, 0, image).setOrigin(0, 0);
-        this.nextButton = new Button(this, "button", 1000, 700, this.funct = function(){console.log()});
     }
 
     chooseNewMail()
@@ -101,13 +98,17 @@ class Play extends Phaser.Scene {
     {
         console.log(mail.imagePath);
         this.load.image(mail.imagePath, mail.imagePath); //uses the URL as a key
-        if(this.bgSprite != 0 )
-        {
-            this.bgSprite.destroy();
-        }
         this.load.on(Phaser.Loader.Events.COMPLETE, () => 
         {
-            this.bgSprite = this.add.sprite(0, 0, mail.imagePath).setOrigin(0,0);
+            if(this.mailSprite != 0 )
+            {
+               this.mailSprite.destroy();
+            }
+            if(this.nextButton != 0 )
+            {
+                this.nextButton._removeButton();
+            }
+            this.mailSprite = this.add.sprite(0, 0, mail.imagePath).setOrigin(0,0);
             this.nextButton = new Button(this, "button", 1000, 700, this.funct = function(){this.displayNewMail(this.chooseNewMail())});
         });
         this.load.start();

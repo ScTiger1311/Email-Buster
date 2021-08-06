@@ -16,22 +16,36 @@ class Button extends Phaser.GameObjects.Sprite {
         this.startButton.on('pointerup', function () { this.mouseButton = false; }, this)
         
         let update = () => {
-            this.mouseX = this.scene.input.mousePointer.x;
-            this.mouseY = this.scene.input.mousePointer.y;
-            if (this.mouseX > this.startButton.x
-                && this.mouseX < this.startButton.x + this.startButton.width
-                && this.mouseY > this.startButton.y
-                && this.mouseY < this.startButton.y + this.startButton.height) {
-                this.startButton.setFrame("button_hover");
-                if (this.mouseButton == true) {
-                    this.startButton.setFrame("button_down");
-                    this.mouseButton = false;
-                    this.scene_.funct();
+            try 
+            {
+                this.mouseX = this.scene.input.mousePointer.x;
+                this.mouseY = this.scene.input.mousePointer.y;
+                if (this.mouseX > this.startButton.x
+                    && this.mouseX < this.startButton.x + this.startButton.width
+                    && this.mouseY > this.startButton.y
+                    && this.mouseY < this.startButton.y + this.startButton.height) {
+                    this.startButton.setFrame("button_hover");
+                    if (this.mouseButton == true) {
+                        this.startButton.setFrame("button_down");
+                        this.mouseButton = false;
+                        this.scene_.funct();
+                    }
                 }
+                else {
+                    this.startButton.setFrame("button_neutral");
+                }
+            } 
+            catch (error)
+            {
+                console.log("Error in Button.js: " + error);
             }
-            else {
-                this.startButton.setFrame("button_neutral");
-            }
+            
+        }
+        this._removeButton = () => 
+        {
+            this.scene_.events.removeListener("update");
+            this.startButton.destroy();
+            this.destroy();
         }
         scene_.events.on("update", function () { update(); });
     }
