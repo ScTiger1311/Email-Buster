@@ -7,6 +7,7 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.atlas("clearbutton_red", "./assets/spritesheets/clearbutton_red.png", "./assets/spritesheets/clearbutton_red.json"); //this one is used for testing/debugging purposes
         this.load.atlas("clearbutton", "./assets/spritesheets/clearbutton.png", "./assets/spritesheets/clearbutton.json"); //this one is used as an invisible hitbox
+        this.load.atlas("clearbutton_darken", "./assets/spritesheets/clearbutton_darken.png", "./assets/spritesheets/clearbutton_darken.json"); //this one is used as an invisible hitbox
         this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as an actual button
     }
 
@@ -32,7 +33,10 @@ class Play extends Phaser.Scene {
             
         ];
 
-        this.bgSprite = 0; //placeholder to give this a value that exists, but isn't a gameobject.
+        //this.reportButton = new Button(this, "clearbutton_darken", )
+        this.mailSprite = 0; //placeholder to give this a value that exists, but isn't a gameobject.
+        this.nextButton = 0;
+        this.bgSprite = this.add.sprite(0,0, "MailBG").setOrigin(0,0);
         this.usedMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
         this.usedMailFake = []; //stores all of the used fake mail in the current game session, so that repeat mail will not occur
         this.displayNewMail(this.chooseNewMail());//loads the initial email
@@ -112,5 +116,10 @@ class Play extends Phaser.Scene {
         });
         this.load.start();
         
+    }
+
+    showReportMenu()
+    {
+        console.log("showed report menu");
     }
 }
