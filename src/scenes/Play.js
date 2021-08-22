@@ -10,6 +10,7 @@ class Play extends Phaser.Scene {
         this.load.atlas("clearbutton_darken", "./assets/spritesheets/clearbutton_darken.png", "./assets/spritesheets/clearbutton_darken.json"); //this one is used as an invisible hitbox
         this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as an actual button
         this.load.image("MailBG", "./assets/single_sprites/MailBG.png"); //used as a background for the game
+        this.load.image("Report_Menu", "./assets/single_sprites/Report_Menu.png"); //used for reporting the email as fishy
     }
 
     //runs once, after preload, just as the scene starts
@@ -34,13 +35,19 @@ class Play extends Phaser.Scene {
             
         ];
 
-        //this.reportButton = new Button(this, "clearbutton_darken", )
+        
         this.mailSprite = 0; //placeholder to give this a value that exists, but isn't a gameobject.
         this.nextButton = 0;
         this.bgSprite = this.add.sprite(0,0, "MailBG").setOrigin(0,0);
         this.usedMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
         this.usedMailFake = []; //stores all of the used fake mail in the current game session, so that repeat mail will not occur
-        this.displayNewMail(this.chooseNewMail());//loads the initial email
+        this.regenerateMail();//loads the initial email
+        this.reportButton = new Button(this, "clearbutton_darken", 765, 2, this.showReportMenu, [])
+        this.reportButton.setHeight(59);
+        this.reportButton.setWidth(230);
+        this.nextButton = new Button(this, "button", 1000, 700, this.regenerateMail, []);
+
+        
     }
 
     update(time, delta) {
@@ -51,7 +58,7 @@ class Play extends Phaser.Scene {
     {
         let randNum = Math.random() * 100;
         let fakeMaxVal = 20; //determines the % chance of a fake mail                                                                 /* ######## Important line here ########## */
-        console.log(randNum);
+        //console.log(randNum);
         if(randNum <= fakeMaxVal)
         {
             if(this.unusedMailFake.length > 0) //check to make sure there's at least one element
@@ -98,7 +105,7 @@ class Play extends Phaser.Scene {
 
     displayNewMail(mail) //the code that loads/unloads images, and sets up the new email.
     {
-        console.log(mail.imagePath);
+        //console.log(mail.imagePath);
         this.load.image(mail.imagePath, mail.imagePath); //uses the URL as a key
         this.load.on(Phaser.Loader.Events.COMPLETE, () => 
         {
@@ -106,19 +113,32 @@ class Play extends Phaser.Scene {
             {
                this.mailSprite.destroy();
             }
-            if(this.nextButton != 0 )
-            {
-                this.nextButton._removeButton();
-            }
+
             this.mailSprite = this.add.sprite(0, 0, mail.imagePath).setOrigin(0,0);
-            this.nextButton = new Button(this, "button", 1000, 700, this.funct = function(){this.displayNewMail(this.chooseNewMail())});
         });
         this.load.start();
         
     }
 
-    showReportMenu()
+    regenerateMail() //helper function to be placed as an argument for a button
+    {
+        this.displayNewMail(this.chooseNewMail());
+    }
+
+    showReportMenu() //opens the report menu
     {
         console.log("showed report menu");
+        this.reportMenu = this.add.sprite(600, 63, "Report_Menu").setOrigin(0,0);
+        this.reportMenuCloseButton = new Button(this, "clearbutton_darken", 962, 67, this.hideReportMenu, []);
+        this.reportMenuCloseButton.setHeight(33);
+        this.reportMenuCloseButton.setWidth(33);
+
+    }
+
+    hideReportMenu() //closes the report menu and deletes the buttons/assets from the stage
+    {
+        console.log("hid report menu");
+        this.reportMenu.destroy();
+        this.reportMenuCloseButton._removeButton();
     }
 }
