@@ -8,9 +8,11 @@ class Play extends Phaser.Scene {
         this.load.atlas("clearbutton_red", "./assets/spritesheets/clearbutton_red.png", "./assets/spritesheets/clearbutton_red.json"); //this one is used for testing/debugging purposes
         this.load.atlas("clearbutton", "./assets/spritesheets/clearbutton.png", "./assets/spritesheets/clearbutton.json"); //this one is used as an invisible hitbox
         this.load.atlas("clearbutton_darken", "./assets/spritesheets/clearbutton_darken.png", "./assets/spritesheets/clearbutton_darken.json"); //this one is used as an invisible hitbox
-        this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as an actual button
+        this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as a test button
+        this.load.atlas("xbutton_red", "./assets/spritesheets/xbutton_red.png", "./assets/spritesheets/xbutton_red.json"); //x button for the report popup
         this.load.image("MailBG", "./assets/single_sprites/MailBG.png"); //used as a background for the game
         this.load.image("Report_Menu", "./assets/single_sprites/Report_Menu.png"); //used for reporting the email as fishy
+        this.load.image("Mail_Tutorial", "./assets/single_sprites/Mail_Tutorial.png"); //the tutorial that tells you to press the report button
     }
 
     //runs once, after preload, just as the scene starts
@@ -41,6 +43,7 @@ class Play extends Phaser.Scene {
             
         ];
         this.startRound();
+        this.tutorialSprite = this.add.sprite(0, 0, "Mail_Tutorial").setOrigin(0,0);
     }
 
     startRound()
@@ -147,6 +150,11 @@ class Play extends Phaser.Scene {
 
     replyToMail() //activates when you press the reply button. sets that spot in the responses array to true
     {
+        if(this.tutorialSprite != 0)
+        {
+            this.tutorialSprite.destroy();
+            this.tutorialSprite = 0;
+        }
         this.answerQueue.push(new Mail
             (
                 this,
@@ -162,6 +170,11 @@ class Play extends Phaser.Scene {
     
     confirmReportMail()
     {
+        if(this.tutorialSprite != 0)
+        {
+            this.tutorialSprite.destroy();
+            this.tutorialSprite = 0;
+        }
         this.answerQueue.push(new Mail
         (
             this,
@@ -289,8 +302,8 @@ class Play extends Phaser.Scene {
     showReportMenu() //opens the report menu
     {
         this.reportMenu = this.add.sprite(600, 63, "Report_Menu").setOrigin(0,0);
-        this.reportMenuCloseButton = new Button(this, "clearbutton_darken", 962, 67, this.hideReportMenu, []);
-        this.reportMenuCloseButton.setHeight(33);
+        this.reportMenuCloseButton = new Button(this, "xbutton_red", 963, 65, this.hideReportMenu, []);
+        this.reportMenuCloseButton.setHeight(34);
         this.reportMenuCloseButton.setWidth(33);
         this.reportMenuConfirmButton = new Button(this, "button", 750, 310, this.confirmReportMail, []);
         this.reportMenuConfirmButton.setHeight(33);
