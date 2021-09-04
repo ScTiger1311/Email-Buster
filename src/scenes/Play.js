@@ -10,6 +10,7 @@ class Play extends Phaser.Scene {
         this.load.atlas("clearbutton_darken", "./assets/spritesheets/clearbutton_darken.png", "./assets/spritesheets/clearbutton_darken.json"); //this one is used as an invisible hitbox
         this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as a test button
         this.load.atlas("xbutton_red", "./assets/spritesheets/xbutton_red.png", "./assets/spritesheets/xbutton_red.json"); //x button for the report popup
+        this.load.atlas("checkbox", "./assets/spritesheets/checkbox.png", "./assets/spritesheets/checkbox.json"); //used for the checkboxes in the report menu
         this.load.image("MailBG", "./assets/single_sprites/MailBG.png"); //used as a background for the game
         this.load.image("Report_Menu", "./assets/single_sprites/Report_Menu.png"); //used for reporting the email as fishy
         this.load.image("Mail_Tutorial", "./assets/single_sprites/Mail_Tutorial.png"); //the tutorial that tells you to press the report button
@@ -308,6 +309,21 @@ class Play extends Phaser.Scene {
         this.reportMenuConfirmButton = new Button(this, "button", 750, 310, this.confirmReportMail, []);
         this.reportMenuConfirmButton.setHeight(33);
         this.reportMenuConfirmButton.setWidth(120);
+        let checkbox1Xpos = 607;
+        let checkbox1Ypos = 112;
+        let checkboxOffset = 46;
+        this.reportMenuCheckbox1 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 0 + checkbox1Ypos);
+        this.reportMenuCheckbox1.setHeight(25);
+        this.reportMenuCheckbox1.setWidth(25);
+        this.reportMenuCheckbox2 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 1 + checkbox1Ypos);
+        this.reportMenuCheckbox2.setHeight(25);
+        this.reportMenuCheckbox2.setWidth(25);
+        this.reportMenuCheckbox3 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 2 + checkbox1Ypos);
+        this.reportMenuCheckbox3.setHeight(25);
+        this.reportMenuCheckbox3.setWidth(25);
+        this.reportMenuCheckbox4 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 3 + checkbox1Ypos);
+        this.reportMenuCheckbox4.setHeight(25);
+        this.reportMenuCheckbox4.setWidth(25);
     }
 
     hideReportMenu() //closes the report menu and deletes the buttons/assets from the stage
@@ -315,5 +331,9 @@ class Play extends Phaser.Scene {
         this.reportMenu.destroy();
         this.reportMenuCloseButton._removeButton();
         this.reportMenuConfirmButton._removeButton();
+        this.reportMenuCheckbox1._removeCheckbox();
+        this.reportMenuCheckbox2._removeCheckbox();
+        this.reportMenuCheckbox3._removeCheckbox();
+        this.reportMenuCheckbox4._removeCheckbox();
     }
 }

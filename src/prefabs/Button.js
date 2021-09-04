@@ -1,9 +1,16 @@
 class Button extends Phaser.GameObjects.Sprite {
-    //the json file must include 3 frames, named button_neutral, button_hover, button_down
-    //you must load the atlas. for example
-    //      this.load.atlas("play", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json");
-    //in order to use it to go to another scene
-    //      this.startButton = new Button(this, "play", 200, 450, function(){this.scene.start("Play");});
+    /*
+    the json file must include 3 frames, named button_neutral, button_hover, button_down
+    you must load the atlas. for example
+          this.load.atlas("play", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json");
+    in order to use it to go to another scene
+         this.startButton = new Button(this, "play", 200, 450, this.nextScene, ["Pixelroom"]);
+    
+        nextScene(sceneName)
+        {
+            this.scene.start(sceneName);
+        }
+    */
     constructor(scene_, atlas, x, y, funct, args) {
         super(scene_, atlas, x, y);
         this.scene_ = scene_ //the scene to execute the code in
