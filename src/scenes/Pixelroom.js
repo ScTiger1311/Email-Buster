@@ -8,6 +8,7 @@ class Pixelroom extends Phaser.Scene {
         this.load.image("PixelroomBG", "./assets/single_sprites/Pixel_Room_BG.png");
         this.load.image("Figure", "./assets/single_sprites/Figure.png");
         this.load.image("Arrow", "./assets/single_sprites/Arrow.png");
+        this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as a test button
     }
 
     //runs once, after preload, just as the scene starts
@@ -15,8 +16,10 @@ class Pixelroom extends Phaser.Scene {
         console.log("entered the Pixelroom.js scene");
         this.playerScale = 15; //the scale of the player sprite
         this.movespeed = 10; //in pixels per 1/60th of a second
-        this.dayOver = false; //has the player checked their emails for today?
+        this.dayOver = false; //has the player checked their emails for today? true/false/"inShopMenu"
+        this.dayNumber = 0; //0 is the first day, and includes the whole tutorial
         this.floorheight = 734;
+        this.playerPaused = false;
         this.bgSprite = this.add.sprite(0, 0, "PixelroomBG").setOrigin(0, 0);
         this.player = this.add.sprite(900, 734, "Figure").setOrigin(0, 1).setScale(this.playerScale); //sets the default position of the player
         this.arrow = this.add.sprite(0, 0, "Arrow").setOrigin(0, 1).setScale(this.playerScale/2).setAlpha(0,0,0,0);
@@ -31,35 +34,73 @@ class Pixelroom extends Phaser.Scene {
         let deltaMultiplier = (delta / 16.66667); //for refresh rate indepence
 
         //handles the very basic and limited movement
-        if(keyLEFT.isDown == true && this.player.x > 62)
+        if(this.playerPaused === false)
         {
-            this.player.x -= this.movespeed * deltaMultiplier;
-            if(this.movementArrowLeft !== 0)
+            if(keyLEFT.isDown == true && this.player.x > 62)
             {
-                this.movementArrowLeft.destroy();
-                this.movementArrowLeft = 0;
-                this.movementArrowRight.destroy();
-                this.movementArrowRight = 0;
+                this.player.x -= this.movespeed * deltaMultiplier;
+                if(this.movementArrowLeft !== 0)
+                {
+                    this.movementArrowLeft.destroy();
+                    this.movementArrowLeft = 0;
+                    this.movementArrowRight.destroy();
+                    this.movementArrowRight = 0;
+                }
+            }
+            if(keyRIGHT.isDown === true && this.player.x < game.config.width - 58 - this.player.width * this.playerScale)
+            {
+                this.player.x += this.movespeed * deltaMultiplier;
+            }
+    
+            if( this.player.x > 70 && this.player.x < 210 && this.dayOver === false) //if the player is near to their PC and the day isn't over yet
+            {
+                this.arrow.x = this.player.x;
+                this.arrow.y = this.player.y - 300;
+                this.arrow.alpha = 1;
+                if(keyUP.isDown == true)
+                {
+                    this.dayOver = true;
+                    this.scene.switch("Play");
+                }
+            }
+            else
+            {
+                this.arrow.alpha = 0;
+            }
+    
+            if( this.player.x > 810 && this.player.x < 990 && this.dayOver === true) //if the player is near to the door, and the day is over
+            {
+                this.arrow.x = this.player.x;
+                this.arrow.y = this.player.y - 300;
+                this.arrow.alpha = 1;
+                if(keyUP.isDown == true) //end the day, pause the players movement, and open the shop/nighttime menu
+                {
+                    this.dayOver = "inShopMenu"
+                    this.playerPaused = true;
+                    this.cameras.main.fade(1000, 20, 20, 20, true, this.openShopMenu);
+                    this.openShopMenu();
+                }
             }
         }
-        if(keyRIGHT.isDown === true && this.player.x < game.config.width - 58 - this.player.width * this.playerScale)
-        {
-            this.player.x += this.movespeed * deltaMultiplier;
-        }
+    }
 
-        if( this.player.x > 60 && this.player.x < 200 && dayOver == false) //if the player is near to their PC and the day isn't over yet
+    openShopMenu(camera, complete) //this gets called once every frame until the fade effect is done. When it's done, the callback sets "complete" to 1
+    {
+        if(complete === 1)
         {
-            this.arrow.x = this.player.x;
-            this.arrow.y = this.player.y - 300;
-            this.arrow.alpha = 1;
-            if(keyUP.isDown == true)
-            {
-                this.scene.switch("Play");
-            }
+            this.cameras.main.fadeFrom(200, 20, 20, 20, true);
+            this.shopBG = this.add.rectangle(0, 0, 1200, 900, 0x202020).setOrigin(0,0);
+            this.nextDayButton = new Button (this, "button", 500, 700, this.closeShopMenu)
         }
-        else
-        {
-            this.arrow.alpha = 0;
-        }
+    }
+
+    closeShopMenu()
+    {
+        this.nextDayButton._removeButton();
+        this.shopBG.destroy();
+        this.cameras.main.fadeFrom(200, 20, 20, 20, true);
+        this.dayNumber++;
+        this.dayOver = false;
+        this.playerPaused = false;
     }
 }

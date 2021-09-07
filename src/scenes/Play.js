@@ -286,7 +286,7 @@ class Play extends Phaser.Scene {
         this.resultsTextBox.x = this.resultsLocationX;
         this.resultsTextBox.y = this.resultsLocationY;
 
-        this.nextDayButton = new Button(this, "button", 700, 600, this.switchToScene, ["Pixelroom"]);
+        this.nextDayButton = new Button(this, "button", 700, 600, this.endEmailSegment, []);
     }
     
     calculateScore(mailList, answerList)
@@ -351,9 +351,9 @@ class Play extends Phaser.Scene {
         this.reportMenuCheckbox4._removeCheckbox();
     }
 
-    switchToScene(sceneName)
+    endEmailSegment()
     {
-        console.log("attempted to switch to scene: " + sceneName)
-        this.scene.switch(sceneName);
+        this.startRound();
+        this.scene.switch("Pixelroom");
     }
 }
