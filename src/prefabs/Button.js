@@ -24,8 +24,8 @@ class Button extends Phaser.GameObjects.Sprite {
         this.startButton.on('pointerup', function () { this.mouseButton = false; }, this)
         
         let update = () => {
-            try 
-            {
+            /*try 
+            {*/
                 this.mouseX = this.scene_.input.mousePointer.x;
                 this.mouseY = this.scene_.input.mousePointer.y;
                 if (this.mouseX > this.startButton.x
@@ -42,11 +42,11 @@ class Button extends Phaser.GameObjects.Sprite {
                 else {
                     this.startButton.setFrame("button_neutral");
                 }
-            } 
+            /*} 
             catch (error)
             {
                 console.log("Error in Button.js: " + error);
-            }
+            }*/
             
         }
         this._removeButton = () => 

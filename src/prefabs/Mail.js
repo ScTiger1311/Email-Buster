@@ -6,10 +6,11 @@
 */
 
 class Mail extends Phaser.GameObjects.Sprite {
-    constructor(scene, imagePath, legitimate, reason1, reason2, reason3, reason4)
+    constructor(scene, imagePath, previewImagePath, legitimate, reason1, reason2, reason3, reason4)
     {
         super(scene);
         this.imagePath = imagePath; //the filepath to the mail image
+        this.previewImagePath = previewImagePath;
         this.legitimate = legitimate; //boolean, true=don't report, false=report
         this.reason1 = reason1; //Sender is posing as someone they aren't
         this.reason2 = reason2; //Email contains link to a suspicious website
@@ -19,7 +20,7 @@ class Mail extends Phaser.GameObjects.Sprite {
 
     toString()
     {
-        return("Mail Object: legitimate: " + this.legitimate + " imagepath: " + this.imagePath);
+        return("Mail Object: legitimate: " + this.legitimate + " imagepath: " + this.imagePath + "previewImagePath: " + this.previewImagePath);
     }
 
     /*
@@ -35,6 +36,7 @@ class Mail extends Phaser.GameObjects.Sprite {
         if
         (
             this.imagePath === mailToCompare.imagePath &&
+            this.imagePath === mailToCompare.previewImagePath &&
             this.legitimate === mailToCompare.legitimate &&
             this.reason1 === mailToCompare.reason1 &&
             this.reason2 === mailToCompare.reason2 &&

@@ -22,20 +22,20 @@ class Play extends Phaser.Scene {
 
         this.unusedMailReal = //stores all the real mail objects (see Mail.js for a description of the data type)
         [
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
         ];
         this.unusedMailFake = //stores all the fake mail objects
         [
-            new Mail(this, "./assets/single_sprites/Mail_Fake_ffff.png", false,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_ffft.png", false,      false, false, false, true),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_fftt.png", false,      false, false, true, true),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_ftft.png", false,      false, true, false, true),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_fttf.png", false,      false, true, true, false),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_tfft.png", false,      true, false, false, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_ffff.png", "./assets/single_sprites/EmailPreview.png", false,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_ffft.png", "./assets/single_sprites/EmailPreview.png", false,      false, false, false, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_fftt.png", "./assets/single_sprites/EmailPreview.png", false,      false, false, true, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_ftft.png", "./assets/single_sprites/EmailPreview.png", false,      false, true, false, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_fttf.png", "./assets/single_sprites/EmailPreview.png", false,      false, true, true, false),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_tfft.png", "./assets/single_sprites/EmailPreview.png", false,      true, false, false, true),
             
         ];
         this.usedMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
@@ -52,6 +52,7 @@ class Play extends Phaser.Scene {
 
     startRound()
     {
+        this.arePreviewsLoaded = false; //variable to keep track of if the previews are loaded
         this.mailSprite = 0; //placeholder to give this a value that exists, but isn't a gameobject.
         this.replyButton = 0;
         this.bgSprite = this.add.sprite(0,0, "MailBG").setOrigin(0,0);
@@ -137,7 +138,6 @@ class Play extends Phaser.Scene {
                 }
             }
         }
-        //console.log(arrayToReturn);
         //yay, we now have a placeholder mail queue!
     
         for(let i = 0; i < queueLength; i++)
@@ -166,6 +166,7 @@ class Play extends Phaser.Scene {
             (
                 this,
                 this.emailQueue[0].imagePath,
+                this.emailQueue[0].previewImagePath,
                 true,
                 this.emailQueue[0].reason1, //these need to be changed when reasons are implemented
                 this.emailQueue[0].reason2,
@@ -186,6 +187,7 @@ class Play extends Phaser.Scene {
         (
             this,
             this.emailQueue[0].imagePath,
+            this.emailQueue[0].previewImagePath,
             false,
             this.reportMenuCheckbox1.getValue(), //these need to be changed when reasons are implemented
             this.reportMenuCheckbox2.getValue(),
@@ -230,21 +232,31 @@ class Play extends Phaser.Scene {
 
     showNewMail(queue) //shows the current mail + side bar.
     {
+
         this.load.image(queue[0].imagePath, queue[0].imagePath); //uses the URL as the key
         this.load.on(Phaser.Loader.Events.COMPLETE, () => 
         {
-            if(this.mailSprite != 0)
+            if(this.mailSprite !== 0)
             {
                 this.mailSprite.destroy();
             }
             this.mailSprite = this.add.sprite(0, 0, queue[0].imagePath).setOrigin(0,0);
-            //this.replyButton = new Button(this, "button", 1000, 700, this.funct = function(){this.displayNewMail(this.chooseNewMail())});
         });
         this.load.start();
+        if(this.arePreviewsLoaded === false)
+        {
+            this.loadMailPreviews(queue);
+        }
+        else
+        {
+            this.showMailPreviews(queue);
+        }
     }
 
     nextMailInQueue(queue) //helper function to be placed as an argument for a button
     {
+        this.destroyOldPreviews();
+        this.previewSlots = new Array();
         if(queue.length <= 1)
         {
             this.endRound();
@@ -256,22 +268,65 @@ class Play extends Phaser.Scene {
         }
     }
 
+    loadMailPreviews(queue)
+    {
+        let numImagesLoaded = 0;
+        for( let i = 0; i < queue.length; i++)
+        {
+            this.load.image(`previewImage${i}`, queue[i].previewImagePath);
+            this.load.on(Phaser.Loader.Events.COMPLETE, () => 
+            {
+                numImagesLoaded++;
+                if(numImagesLoaded === queue.length)
+                {
+                    this.showMailPreviews(queue);
+                    this.arePreviewsLoaded = true;
+                }
+            });
+            this.load.start();
+        }
+    }
+
+    showMailPreviews(queue) //broken function :( probably a good idea to try loading all the preview images at once, at the beginning. That way it doesn't need to be loaded multiple times
+    {
+        let x = 6; //position of the left edge of the first (and all) emails in the list
+        let y = 69; //position of the top edge of the first email in the list
+        let ySpacing = 100; //spacing between the mail previews in px
+        this.previewSlots = new Array();
+        this.queueAsdf = queue;
+        for(let i = 0; i < queue.length; i++)
+        {
+            this.previewSlots.push(this.add.sprite(x, y + ySpacing * i, `previewImage${i}`).setOrigin(0,0));
+        }
+    }
+
+    destroyOldPreviews()
+    {
+        for(let i = 0; i < this.previewSlots.length; i++ ) //clears out the old mail
+        {
+            if(this.previewSlots[i] !== 0)
+            {
+                this.previewSlots[i].destroy();
+            }
+            
+        }
+    }
+
     endRound() //ends the game when the email queue is empty, and shows the results screen
     {
         if(this.reportMenuVisible === true)
         {
             this.hideReportMenu();
         }
-        //console.log(this.answerQueue);
-        //console.log(this.emailQueueCopy);
-        console.log("ended the game");
-
         //reset the mail sprite to the way it was at the start and remove the sprite from the stage
         this.mailSprite.destroy();
-        this.replyButton._removeButton();
-        this.reportButton._removeButton();
         this.mailSprite = 0;
 
+        this.replyButton._removeButton();
+        this.reportButton._removeButton();
+        this.destroyOldPreviews();
+
+        this.arePreviewsLoaded = false;
         this.score = 0;
         this.score = this.calculateScore(this.emailQueueCopy, this.answerQueue);
         this.numCorrect = 0;

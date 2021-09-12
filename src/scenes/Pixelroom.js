@@ -8,13 +8,27 @@ class Pixelroom extends Phaser.Scene {
         this.load.image("PixelroomBG", "./assets/single_sprites/Pixel_Room_BG.png");
         this.load.image("Figure", "./assets/single_sprites/Figure.png");
         this.load.image("Figure_Pink", "./assets/single_sprites/Figure_Pink.png");
-        this.load.image("Arrow", "./assets/single_sprites/Arrow.png");
+        this.load.atlas("Arrow", "./assets/spritesheets/Arrow.png", "./assets/spritesheets/Arrow.json");
         this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as a test button
     }
 
     //runs once, after preload, just as the scene starts
     create() {
         console.log("entered the Pixelroom.js scene");
+        this.anims.create(
+            {
+                key: "Arrow_Anim",
+                frameRate: 2,
+                frames: this.anims.generateFrameNames( "Arrow",
+                {
+                    prefix: "Arrow_0",
+                    start: 1,
+                    end: 2,
+                    first: 1,
+                }),
+                repeat: -1,
+            }
+        )
         this.playerScale = 15; //the scale of the player sprite
         this.movespeed = 10; //in pixels per 1/60th of a second
         this.dayOver = false; //has the player checked their emails for today? true/false/"inShopMenu"
@@ -25,6 +39,7 @@ class Pixelroom extends Phaser.Scene {
         this.bgSprite = this.add.sprite(0, 0, "PixelroomBG").setOrigin(0, 0);
         this.player = this.add.sprite(900, 734, "Figure").setOrigin(0, 1).setScale(this.playerScale); //sets the default position of the player
         this.arrow = this.add.sprite(0, 0, "Arrow").setOrigin(0, 1).setScale(this.playerScale/2).setAlpha(0,0,0,0);
+        this.arrow.play("Arrow_Anim");
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -36,7 +51,9 @@ class Pixelroom extends Phaser.Scene {
             align: "center",
         }).setOrigin(0.5,0);
         this.movementArrowLeft = this.add.sprite(this.player.x - 90, this.player.y + 10 - this.player.displayHeight, "Arrow").setOrigin(0,0).setAngle(-90).setScale(this.playerScale/2);
+        this.movementArrowLeft.play("Arrow_Anim");
         this.movementArrowRight = this.add.sprite(this.player.x + 90, this.player.y + 10 - this.player.displayHeight, "Arrow").setOrigin(1,1).setAngle(90).setScale(this.playerScale/2);
+        this.movementArrowRight.play("Arrow_Anim");
     }
 
     update(time, delta) {
@@ -45,9 +62,9 @@ class Pixelroom extends Phaser.Scene {
         if(this.justSwitchedFromPlayScene === true) //code in here runs once whenever you come from the play scene.
         {
             this.justSwitchedFromPlayScene = false;
-            if(this.dayNumber === 0)
+            if(this.dayNumber === 0) //the code that runs the end of day events
             {
-                this.delayedCallTimer = this.time.delayedCall(750, this.endOfDayEvent, [0], this);
+                this.delayedCallTimer = this.time.delayedCall(950, this.endOfDayEvent, [0], this);
             }
         }
 
