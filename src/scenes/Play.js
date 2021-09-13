@@ -376,9 +376,9 @@ class Play extends Phaser.Scene {
             this.reportMenuCloseButton = new Button(this, "xbutton_red", 963, 65, this.hideReportMenu, []);
             this.reportMenuCloseButton.setHeight(34);
             this.reportMenuCloseButton.setWidth(33);
-            this.reportMenuConfirmButton = new Button(this, "button", 750, 310, this.confirmReportMail, []);
-            this.reportMenuConfirmButton.setHeight(33);
-            this.reportMenuConfirmButton.setWidth(120);
+            this.reportMenuConfirmButton = new Button(this, "clearbutton_darken", 604, 291, this.confirmReportMail, []);
+            this.reportMenuConfirmButton.setHeight(66);
+            this.reportMenuConfirmButton.setWidth(390);
             let checkbox1Xpos = 607;
             let checkbox1Ypos = 112;
             let checkboxOffset = 46;
