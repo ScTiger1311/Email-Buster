@@ -22,20 +22,20 @@ class Play extends Phaser.Scene {
 
         this.unusedMailReal = //stores all the real mail objects (see Mail.js for a description of the data type)
         [
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
             new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
         ];
         this.unusedMailFake = //stores all the fake mail objects
         [
-            new Mail(this, "./assets/single_sprites/Mail_Fake_ffff.png", "./assets/single_sprites/EmailPreview.png", false,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_ffft.png", "./assets/single_sprites/EmailPreview.png", false,      false, false, false, true),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_fftt.png", "./assets/single_sprites/EmailPreview.png", false,      false, false, true, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_ffff.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_ffft.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, false, false, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_fftt.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, false, true, true),
             new Mail(this, "./assets/single_sprites/Mail_Fake_ftft.png", "./assets/single_sprites/EmailPreview.png", false,      false, true, false, true),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_fttf.png", "./assets/single_sprites/EmailPreview.png", false,      false, true, true, false),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_tfft.png", "./assets/single_sprites/EmailPreview.png", false,      true, false, false, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_fttf.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, true, true, false),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_tfft.png", "./assets/single_sprites/EmailPreview_1.png", false,      true, false, false, true),
             
         ];
         this.usedMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
@@ -243,7 +243,7 @@ class Play extends Phaser.Scene {
             this.mailSprite = this.add.sprite(0, 0, queue[0].imagePath).setOrigin(0,0);
         });
         this.load.start();
-        if(this.arePreviewsLoaded === false)
+        if(this.arePreviewsLoaded === false) //avoids loading the mail every time
         {
             this.loadMailPreviews(queue);
         }
@@ -296,7 +296,7 @@ class Play extends Phaser.Scene {
         this.queueAsdf = queue;
         for(let i = 0; i < queue.length; i++)
         {
-            this.previewSlots.push(this.add.sprite(x, y + ySpacing * i, `previewImage${i}`).setOrigin(0,0));
+            this.previewSlots.push(this.add.sprite(x, y + ySpacing * i, `previewImage${queue.length - i - 1}`).setOrigin(0,0)); //idk why you need queue.length - i - 1 rather than just i, but it goes in reverse order otherwise
         }
     }
 
@@ -369,29 +369,32 @@ class Play extends Phaser.Scene {
 
     showReportMenu() //opens the report menu
     {
-        this.reportMenuVisible = true;
-        this.reportMenu = this.add.sprite(600, 63, "Report_Menu").setOrigin(0,0);
-        this.reportMenuCloseButton = new Button(this, "xbutton_red", 963, 65, this.hideReportMenu, []);
-        this.reportMenuCloseButton.setHeight(34);
-        this.reportMenuCloseButton.setWidth(33);
-        this.reportMenuConfirmButton = new Button(this, "button", 750, 310, this.confirmReportMail, []);
-        this.reportMenuConfirmButton.setHeight(33);
-        this.reportMenuConfirmButton.setWidth(120);
-        let checkbox1Xpos = 607;
-        let checkbox1Ypos = 112;
-        let checkboxOffset = 46;
-        this.reportMenuCheckbox1 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 0 + checkbox1Ypos);
-        this.reportMenuCheckbox1.setHeight(25);
-        this.reportMenuCheckbox1.setWidth(25);
-        this.reportMenuCheckbox2 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 1 + checkbox1Ypos);
-        this.reportMenuCheckbox2.setHeight(25);
-        this.reportMenuCheckbox2.setWidth(25);
-        this.reportMenuCheckbox3 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 2 + checkbox1Ypos);
-        this.reportMenuCheckbox3.setHeight(25);
-        this.reportMenuCheckbox3.setWidth(25);
-        this.reportMenuCheckbox4 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 3 + checkbox1Ypos);
-        this.reportMenuCheckbox4.setHeight(25);
-        this.reportMenuCheckbox4.setWidth(25);
+        if(this.reportMenuVisible !== true)
+        {
+            this.reportMenuVisible = true;
+            this.reportMenu = this.add.sprite(600, 63, "Report_Menu").setOrigin(0,0);
+            this.reportMenuCloseButton = new Button(this, "xbutton_red", 963, 65, this.hideReportMenu, []);
+            this.reportMenuCloseButton.setHeight(34);
+            this.reportMenuCloseButton.setWidth(33);
+            this.reportMenuConfirmButton = new Button(this, "button", 750, 310, this.confirmReportMail, []);
+            this.reportMenuConfirmButton.setHeight(33);
+            this.reportMenuConfirmButton.setWidth(120);
+            let checkbox1Xpos = 607;
+            let checkbox1Ypos = 112;
+            let checkboxOffset = 46;
+            this.reportMenuCheckbox1 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 0 + checkbox1Ypos);
+            this.reportMenuCheckbox1.setHeight(25);
+            this.reportMenuCheckbox1.setWidth(25);
+            this.reportMenuCheckbox2 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 1 + checkbox1Ypos);
+            this.reportMenuCheckbox2.setHeight(25);
+            this.reportMenuCheckbox2.setWidth(25);
+            this.reportMenuCheckbox3 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 2 + checkbox1Ypos);
+            this.reportMenuCheckbox3.setHeight(25);
+            this.reportMenuCheckbox3.setWidth(25);
+            this.reportMenuCheckbox4 = new Checkbox(this, "checkbox", checkbox1Xpos, checkboxOffset * 3 + checkbox1Ypos);
+            this.reportMenuCheckbox4.setHeight(25);
+            this.reportMenuCheckbox4.setWidth(25);
+        }
     }
 
     hideReportMenu() //closes the report menu and deletes the buttons/assets from the stage
