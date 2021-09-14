@@ -22,27 +22,25 @@ class Play extends Phaser.Scene {
 
         this.unusedMailReal = //stores all the real mail objects (see Mail.js for a description of the data type)
         [
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
         ];
         this.unusedMailFake = //stores all the fake mail objects
         [
-            new Mail(this, "./assets/single_sprites/Mail_Fake_ffff.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_ffft.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, false, false, true),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_fftt.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, false, true, true),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_ftft.png", "./assets/single_sprites/EmailPreview.png", false,      false, true, false, true),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_fttf.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, true, true, false),
-            new Mail(this, "./assets/single_sprites/Mail_Fake_tfft.png", "./assets/single_sprites/EmailPreview_1.png", false,      true, false, false, true),
+            new Mail(this, "./assets/single_sprites/Mail/FakeEmail_001.png", "./assets/single_sprites/Mail/FakeEmail_Preview_001.png", false,      true, false, true, false),
+            new Mail(this, "./assets/single_sprites/Mail/FakeEmail_002.png", "./assets/single_sprites/Mail/FakeEmail_Preview_002.png", false,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/FakeEmail_003.png", "./assets/single_sprites/Mail/FakeEmail_Preview_003.png", false,      true, false, false, true),
+            new Mail(this, "./assets/single_sprites/Mail/FakeEmail_004.png", "./assets/single_sprites/Mail/FakeEmail_Preview_004.png", false,      true, false, true, false),
             
         ];
         this.usedMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
         this.usedMailFake = []; //stores all of the used fake mail in the current game session, so that repeat mail will not occur
 
         //all the variables you might want to edit to tweak the difficulty of the game
-        this.mailQueueLength = 10; //the length of the mail queue. Must be greater than fakeMailMinimumAmount
+        this.mailQueueLength = 6; //the length of the mail queue. Must be greater than fakeMailMinimumAmount
         this.fakeMailMinimumAmount = 2; //the minimum amount of fake mail in the queue. If the game generates less than this amount, automatically replaces random real mail with fake mail
         this.fakeMaxVal = 20; //determines the % chance of a fake mail
         this.nextDayButton = 0;
@@ -268,12 +266,14 @@ class Play extends Phaser.Scene {
         }
     }
 
-    loadMailPreviews(queue)
+    loadMailPreviews(queue) //loads and shows mail previews
     {
+        console.log("Loading Previews")
         let numImagesLoaded = 0;
         for( let i = 0; i < queue.length; i++)
         {
             this.load.image(`previewImage${i}`, queue[i].previewImagePath);
+            console.log(`Loading File: ${queue[i].previewImagePath}`);
             this.load.on(Phaser.Loader.Events.COMPLETE, () => 
             {
                 numImagesLoaded++;
@@ -281,22 +281,22 @@ class Play extends Phaser.Scene {
                 {
                     this.showMailPreviews(queue);
                     this.arePreviewsLoaded = true;
+                    console.log("Loading Done");
                 }
             });
             this.load.start();
         }
     }
 
-    showMailPreviews(queue) //broken function :( probably a good idea to try loading all the preview images at once, at the beginning. That way it doesn't need to be loaded multiple times
+    showMailPreviews(queue)
     {
         let x = 6; //position of the left edge of the first (and all) emails in the list
         let y = 69; //position of the top edge of the first email in the list
         let ySpacing = 100; //spacing between the mail previews in px
         this.previewSlots = new Array();
-        this.queueAsdf = queue;
         for(let i = 0; i < queue.length; i++)
         {
-            this.previewSlots.push(this.add.sprite(x, y + ySpacing * i, `previewImage${queue.length - i - 1}`).setOrigin(0,0)); //idk why you need queue.length - i - 1 rather than just i, but it goes in reverse order otherwise
+            this.previewSlots.push(this.add.sprite(x, y + ySpacing * i, `previewImage${i + (this.mailQueueLength - queue.length)}`).setOrigin(0,0));
         }
     }
 
@@ -325,6 +325,10 @@ class Play extends Phaser.Scene {
         this.replyButton._removeButton();
         this.reportButton._removeButton();
         this.destroyOldPreviews();
+        for(let i = 0; i < this.mailQueueLength; i++ ) //clears out the old mail
+        {
+            this.textures.removeKey(`previewImage${i}`);
+        }
 
         this.arePreviewsLoaded = false;
         this.score = 0;
