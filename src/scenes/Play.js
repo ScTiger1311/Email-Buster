@@ -23,10 +23,10 @@ class Play extends Phaser.Scene {
         this.unusedMailReal = //stores all the real mail objects (see Mail.js for a description of the data type)
         [
             new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/RealEmail_002.png", "./assets/single_sprites/Mail/RealEmail_Preview_002.png", true,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/RealEmail_003.png", "./assets/single_sprites/Mail/RealEmail_Preview_003.png", true,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/RealEmail_004.png", "./assets/single_sprites/Mail/RealEmail_Preview_004.png", true,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail/RealEmail_005.png", "./assets/single_sprites/Mail/RealEmail_Preview_005.png", true,      false, false, false, false),
         ];
         this.unusedMailFake = //stores all the fake mail objects
         [
@@ -268,12 +268,12 @@ class Play extends Phaser.Scene {
 
     loadMailPreviews(queue) //loads and shows mail previews
     {
-        console.log("Loading Previews")
+        //console.log("Loading Previews")
         let numImagesLoaded = 0;
         for( let i = 0; i < queue.length; i++)
         {
             this.load.image(`previewImage${i}`, queue[i].previewImagePath);
-            console.log(`Loading File: ${queue[i].previewImagePath}`);
+            //console.log(`Loading File: ${queue[i].previewImagePath}`);
             this.load.on(Phaser.Loader.Events.COMPLETE, () => 
             {
                 numImagesLoaded++;
@@ -281,7 +281,7 @@ class Play extends Phaser.Scene {
                 {
                     this.showMailPreviews(queue);
                     this.arePreviewsLoaded = true;
-                    console.log("Loading Done");
+                    //console.log("Loading Done");
                 }
             });
             this.load.start();
