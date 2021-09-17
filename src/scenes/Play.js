@@ -22,18 +22,20 @@ class Play extends Phaser.Scene {
 
         this.unusedMailReal = //stores all the real mail objects (see Mail.js for a description of the data type)
         [
-            new Mail(this, "./assets/single_sprites/Mail/RealEmail_001.png", "./assets/single_sprites/Mail/RealEmail_Preview_001.png", true,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail/RealEmail_002.png", "./assets/single_sprites/Mail/RealEmail_Preview_002.png", true,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail/RealEmail_003.png", "./assets/single_sprites/Mail/RealEmail_Preview_003.png", true,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail/RealEmail_004.png", "./assets/single_sprites/Mail/RealEmail_Preview_004.png", true,      false, false, false, false),
-            new Mail(this, "./assets/single_sprites/Mail/RealEmail_005.png", "./assets/single_sprites/Mail/RealEmail_Preview_005.png", true,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
+            new Mail(this, "./assets/single_sprites/Mail1_Real.png", "./assets/single_sprites/EmailPreview_1.png", true,      true, true, false, false),
         ];
         this.unusedMailFake = //stores all the fake mail objects
         [
-            new Mail(this, "./assets/single_sprites/Mail/FakeEmail_001.png", "./assets/single_sprites/Mail/FakeEmail_Preview_001.png", false,      true, false, true, false),
-            new Mail(this, "./assets/single_sprites/Mail/FakeEmail_002.png", "./assets/single_sprites/Mail/FakeEmail_Preview_002.png", false,      true, true, false, false),
-            new Mail(this, "./assets/single_sprites/Mail/FakeEmail_003.png", "./assets/single_sprites/Mail/FakeEmail_Preview_003.png", false,      true, false, false, true),
-            new Mail(this, "./assets/single_sprites/Mail/FakeEmail_004.png", "./assets/single_sprites/Mail/FakeEmail_Preview_004.png", false,      true, false, true, false),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_ffff.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, false, false, false),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_ffft.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, false, false, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_fftt.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, false, true, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_ftft.png", "./assets/single_sprites/EmailPreview.png", false,      false, true, false, true),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_fttf.png", "./assets/single_sprites/EmailPreview_1.png", false,      false, true, true, false),
+            new Mail(this, "./assets/single_sprites/Mail_Fake_tfft.png", "./assets/single_sprites/EmailPreview_1.png", false,      true, false, false, true),
             
         ];
         this.usedMailReal = []; //stores all of the used real mail in the current game session, so that repeat mail will not occur
