@@ -9,7 +9,10 @@ class Play extends Phaser.Scene {
         this.load.atlas("clearbutton", "./assets/spritesheets/clearbutton.png", "./assets/spritesheets/clearbutton.json"); //this one is used as an invisible hitbox
         this.load.atlas("clearbutton_darken", "./assets/spritesheets/clearbutton_darken.png", "./assets/spritesheets/clearbutton_darken.json"); //this one is used as an invisible hitbox
         this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as a test button
-        this.load.atlas("xbutton_red", "./assets/spritesheets/xbutton_red.png", "./assets/spritesheets/xbutton_red.json"); //x button for the report popup
+        this.load.atlas("xbutton_red", "./assets/spritesheets/xbutton_red.png", "./assets/spritesheets/xbutton_red.json");//x button for the report popup
+        this.load.atlas("review_button", "./assets/spritesheets/review_button.png", "./assets/spritesheets/review_button.json");
+        this.load.atlas("nextday_button", "./assets/spritesheets/nextday_button.png", "./assets/spritesheets/nextday_button.json");  
+        this.load.atlas("nextemail_button", "./assets/spritesheets/nextemail_button.png", "./assets/spritesheets/nextemail_button.json");  
         this.load.atlas("checkbox", "./assets/spritesheets/checkbox.png", "./assets/spritesheets/checkbox.json"); //used for the checkboxes in the report menu
         this.load.image("MailBG", "./assets/single_sprites/MailBG.png"); //used as a background for the game
         this.load.image("Report_Menu", "./assets/single_sprites/Report_Menu.png"); //used for reporting the email as fishy
@@ -339,7 +342,8 @@ class Play extends Phaser.Scene {
         this.numCorrect = 0;
         this.numCorrect = this.calculateNumCorrect(this.emailQueueCopy, this.answerQueue);
         
-        this.resultsTextBox = this.add.text(0, 0, `Day over. \nYour score: ${this.score * 1000} \nYour # correct: ${this.numCorrect}/${this.mailQueueLength}`, //This is a template literal https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+        this.resultsTextBox = this.add.text(0, 0,   
+            `Day over. \n\nYour score: ${this.score * 1000}/${this.mailQueueLength * 1000}\n\nIncorrect deductions: ${this.mailQueueLength - this.numCorrect}`, //This is a template literal https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
         { 
             fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
             fontSize: "30px",
@@ -348,8 +352,8 @@ class Play extends Phaser.Scene {
         this.resultsTextBox.x = this.resultsLocationX;
         this.resultsTextBox.y = this.resultsLocationY;
 
-        this.showIncorrectEmailsButton = new Button(this, "button", 500, 600, this.showIncorrectEmails, [this.incorrectEmailsArray]);
-        this.nextDayButton = new Button(this, "button", 700, 600, this.endEmailSegment, []);
+        this.showIncorrectEmailsButton = new Button(this, "review_button", 450, 600, this.showIncorrectEmails, [this.incorrectEmailsArray]);
+        this.nextDayButton = new Button(this, "nextday_button", 750, 600, this.endEmailSegment, []);
     }
 
     showIncorrectEmails(queue)
@@ -357,7 +361,7 @@ class Play extends Phaser.Scene {
         this.resultsTextBox.destroy();
         this.mailSprite = this.add.sprite(0, 0, queue[0].imagePath).setOrigin(0,0);
         this.showIncorrectEmailsButton._removeButton();
-        this.nextIncorrectEmailButton = new Button(this, "button", 500, 600, this.nextIncorrectEmail, [this.incorrectEmailsArray]);
+        this.nextIncorrectEmailButton = new Button(this, "nextemail_button", 450, 600, this.nextIncorrectEmail, [this.incorrectEmailsArray]);
     }
 
     nextIncorrectEmail(queue)
