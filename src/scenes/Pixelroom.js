@@ -43,7 +43,7 @@ class Pixelroom extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        this.tutorialText = this.add.text(600, 230, "Welcome to Email Buster!\nUse the left/right arrow keys to move." ,
+        this.tutorialText = this.add.text(600, 220, "Welcome to Email Buster!\nUse the left/right arrow keys to move." ,
         { 
             fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
             fontSize: "40px",
