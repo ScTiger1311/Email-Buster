@@ -5,11 +5,20 @@ class Pixelroom extends Phaser.Scene {
 
     //if you plan on using assets, you can load them here to load it at the start of the scene. Or, you can load them on the fly.
     preload() {
-        this.load.image("PixelroomBG", "./assets/single_sprites/Pixel_Room_BG.png");
+        this.load.image("Pixelroom_BG_Default",     "./assets/single_sprites/Pixelroom_BG_Default.png");
+        this.load.image("Pixelroom_BG_Upgrade",     "./assets/single_sprites/Pixelroom_BG_Upgrade.png");
+        this.load.image("Pixelroom_Border",         "./assets/single_sprites/Pixelroom_Border.png");
+        this.load.image("Pixelroom_Desk_Default",   "./assets/single_sprites/Pixelroom_Desk_Default.png");
+        this.load.image("Pixelroom_Desk_Upgrade",   "./assets/single_sprites/Pixelroom_Desk_Upgrade.png");
+        this.load.image("Pixelroom_Door",           "./assets/single_sprites/Pixelroom_Door.png");
+        this.load.image("Pixelroom_Monitor",        "./assets/single_sprites/Pixelroom_Monitor.png");
+        this.load.image("Pixelroom_Plant",          "./assets/single_sprites/Pixelroom_Plant.png");
+        this.load.image("Pixelroom_Window",         "./assets/single_sprites/Pixelroom_Window.png");
+
         this.load.image("Figure", "./assets/single_sprites/Figure.png");
         this.load.image("Figure_Pink", "./assets/single_sprites/Figure_Pink.png");
         this.load.atlas("Arrow", "./assets/spritesheets/Arrow.png", "./assets/spritesheets/Arrow.json");
-        this.load.atlas("button", "./assets/spritesheets/button_spritesheet.png", "./assets/spritesheets/button_spritesheet.json"); //this one is used as a test button
+        this.load.atlas("nextday_button", "./assets/spritesheets/nextday_button.png", "./assets/spritesheets/nextday_button.json"); //this one is used as a test button
     }
 
     //runs once, after preload, just as the scene starts
@@ -29,24 +38,33 @@ class Pixelroom extends Phaser.Scene {
                 repeat: -1,
             }
         )
-        this.playerScale = 15; //the scale of the player sprite
-        this.movespeed = 10; //in pixels per 1/60th of a second
+        this.playerScale = 13; //the scale of the player sprite
+        this.movespeed = 7; //in pixels per 1/60th of a second
         this.dayOver = false; //has the player checked their emails for today? true/false/"inShopMenu"
         this.dayNumber = 0; //0 is the first day, and includes the whole tutorial
         this.justSwitchedFromPlayScene = false; 
-        this.floorheight = 734;
+        this.floorheight = 690;
         this.playerPaused = false;
-        this.bgSprite = this.add.sprite(0, 0, "PixelroomBG").setOrigin(0, 0);
-        this.player = this.add.sprite(900, 734, "Figure").setOrigin(0, 1).setScale(this.playerScale); //sets the default position of the player
+
+        this.layer_bg = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_BG_Default").setOrigin(0, 0)] );
+        this.layer_border = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Border").setOrigin(0, 0)] );
+        this.layer_door = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Door").setOrigin(0, 0)] );
+        this.layer_desk = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Desk_Default").setOrigin(0, 0)] );
+        this.layer_monitor = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Monitor").setOrigin(0, 0)] );
+        this.layer_window = this.add.layer();
+        this.layer_plant = this.add.layer();
+
+
+        this.player = this.add.sprite(845, this.floorheight, "Figure").setOrigin(0, 1).setScale(this.playerScale); //sets the default position of the player
         this.arrow = this.add.sprite(0, 0, "Arrow").setOrigin(0, 1).setScale(this.playerScale/2).setAlpha(0,0,0,0);
         this.arrow.play("Arrow_Anim");
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        this.tutorialText = this.add.text(600, 220, "Welcome to Email Buster!\nUse the left/right arrow keys to move." ,
+        this.tutorialText = this.add.text(600, 250, "Welcome to Email Buster!\nUse the left/right arrow keys to move." ,
         { 
             fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
-            fontSize: "40px",
+            fontSize: "35px",
             color: "#000000",
             align: "center",
         }).setOrigin(0.5,0);
@@ -71,7 +89,7 @@ class Pixelroom extends Phaser.Scene {
         //handles the very basic and limited movement
         if(this.playerPaused === false)
         {
-            if(keyLEFT.isDown == true && this.player.x > 62)
+            if(keyLEFT.isDown == true && this.player.x > 146) // if player presses left, and they aren't too far to the left
             {
                 this.player.x -= this.movespeed * deltaMultiplier;
                 if(this.movementArrowLeft !== 0)
@@ -84,12 +102,22 @@ class Pixelroom extends Phaser.Scene {
                     this.tutorialText = 0;
                 }
             }
-            if(keyRIGHT.isDown === true && this.player.x < game.config.width - 58 - this.player.width * this.playerScale)
+            if(keyRIGHT.isDown === true && this.player.x < game.config.width - 148 - this.player.width * this.playerScale) // if player presses right, and they aren't too far to the right
             {
                 this.player.x += this.movespeed * deltaMultiplier;
+                if(this.movementArrowLeft !== 0)
+                {
+                    this.movementArrowLeft.destroy();
+                    this.movementArrowLeft = 0;
+                    this.movementArrowRight.destroy();
+                    this.movementArrowRight = 0;
+                    this.tutorialText.destroy();
+                    this.tutorialText = 0;
+                }
+                
             }
     
-            if( this.player.x > 70 && this.player.x < 210 && this.dayOver === false) //if the player is near to their PC and the day isn't over yet
+            if( this.player.x > 150 && this.player.x < 260 && this.dayOver === false) //if the player is near to their PC and the day isn't over yet
             {
                 this.arrow.x = this.player.x;
                 this.arrow.y = this.player.y - 300;
@@ -128,7 +156,7 @@ class Pixelroom extends Phaser.Scene {
         {
             this.cameras.main.fadeFrom(200, 20, 20, 20, true);
             this.shopBG = this.add.rectangle(0, 0, 1200, 900, 0x202020).setOrigin(0,0);
-            this.nextDayButton = new Button (this, "button", 575, 620, this.closeShopMenu)
+            this.nextDayButton = new Button (this, "nextday_button", 500, 620, this.closeShopMenu)
             this.dayOverText = this.add.text(600, 230, "You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\n\n\n\n\nContinue" ,
             { 
                 fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
@@ -155,14 +183,14 @@ class Pixelroom extends Phaser.Scene {
     {
         if(eventNumber === 0) //the tutorial event, mainly used to prompt the player into leaving the room
         {
-            this.tutorialText = this.add.text(600, 230, "Nice job today! Looks like your shift is over.\nYou can head home now." ,
+            this.tutorialText = this.add.text(600, 250, "Nice job today! Looks like your shift is over.\nYou can head home now." ,
             { 
                 fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
-                fontSize: "40px",
+                fontSize: "35px",
                 color: "#000000",
                 align: "center",
             }).setOrigin(0.5,0);
-            this.npcSprite = this.add.sprite(900, 734, "Figure_Pink").setOrigin(0, 1).setScale(this.playerScale);
+            this.npcSprite = this.add.sprite(845, this.floorheight, "Figure_Pink").setOrigin(0, 1).setScale(this.playerScale);
         }
     }
 
