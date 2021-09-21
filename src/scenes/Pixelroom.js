@@ -38,6 +38,7 @@ class Pixelroom extends Phaser.Scene {
                 repeat: -1,
             }
         )
+        this.officeLevel = 0; //the current level of the office. used in officeUpgrade()
         this.playerScale = 13; //the scale of the player sprite
         this.movespeed = 7; //in pixels per 1/60th of a second
         this.dayOver = false; //has the player checked their emails for today? true/false/"inShopMenu"
@@ -46,32 +47,40 @@ class Pixelroom extends Phaser.Scene {
         this.floorheight = 690;
         this.playerPaused = false;
 
-        this.layer_bg = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_BG_Default").setOrigin(0, 0)] );
-        this.layer_border = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Border").setOrigin(0, 0)] );
-        this.layer_door = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Door").setOrigin(0, 0)] );
-        this.layer_desk = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Desk_Default").setOrigin(0, 0)] );
-        this.layer_monitor = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Monitor").setOrigin(0, 0)] );
-        this.layer_window = this.add.layer();
-        this.layer_plant = this.add.layer();
+        this.layer_bg = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_BG_Default").setOrigin(0, 0)] ).setDepth(0);
+        this.layer_border = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Border").setOrigin(0, 0)] ).setDepth(1);
+        this.layer_door = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Door").setOrigin(0, 0)] ).setDepth(2);
+        this.layer_desk = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Desk_Default").setOrigin(0, 0)] ).setDepth(3);
+        this.layer_monitor = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Monitor").setOrigin(0, 0)] ).setDepth(4);
+        this.layer_window = this.add.layer().setDepth(5);
+        this.layer_plant = this.add.layer().setDepth(6);
+        this.layer_npc = this.add.layer().setDepth(7);
+        this.layer_player = this.add.layer([this.add.sprite(845, this.floorheight, "Figure").setOrigin(0, 1).setScale(this.playerScale)]).setDepth(8); //sets the default position of the player
+            this.player = this.layer_player.getAt(0);
+        this.layer_text = this.add.layer().setDepth(9);
+        this.layer_arrows = this.add.layer([
+            this.add.sprite(0, 0, "Arrow").setScale(this.playerScale/2).setAlpha(0,0,0,0).setOrigin(0, 1).play("Arrow_Anim"),
+            this.add.sprite(this.player.x - 90, this.player.y + 10 - this.player.displayHeight, "Arrow").setOrigin(0,0).setAngle(-90).setScale(this.playerScale/2).play("Arrow_Anim"),
+            this.add.sprite(this.player.x + 90, this.player.y + 10 - this.player.displayHeight, "Arrow").setOrigin(1,1).setAngle(90).setScale(this.playerScale/2).play("Arrow_Anim"),
+        ]).setDepth(10);
+            this.arrow = this.layer_arrows.getAt(0);
+            this.movementArrowLeft = this.layer_arrows.getAt(1);
+            this.movementArrowRight = this.layer_arrows.getAt(2);
+        this.layer_shop = this.add.layer().setDepth(11);
 
 
-        this.player = this.add.sprite(845, this.floorheight, "Figure").setOrigin(0, 1).setScale(this.playerScale); //sets the default position of the player
-        this.arrow = this.add.sprite(0, 0, "Arrow").setOrigin(0, 1).setScale(this.playerScale/2).setAlpha(0,0,0,0);
-        this.arrow.play("Arrow_Anim");
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        this.tutorialText = this.add.text(600, 250, "Welcome to Email Buster!\nUse the left/right arrow keys to move." ,
-        { 
-            fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
-            fontSize: "35px",
-            color: "#000000",
-            align: "center",
-        }).setOrigin(0.5,0);
-        this.movementArrowLeft = this.add.sprite(this.player.x - 90, this.player.y + 10 - this.player.displayHeight, "Arrow").setOrigin(0,0).setAngle(-90).setScale(this.playerScale/2);
-        this.movementArrowLeft.play("Arrow_Anim");
-        this.movementArrowRight = this.add.sprite(this.player.x + 90, this.player.y + 10 - this.player.displayHeight, "Arrow").setOrigin(1,1).setAngle(90).setScale(this.playerScale/2);
-        this.movementArrowRight.play("Arrow_Anim");
+        this.layer_text.add(
+            this.add.text(600, 250, "Welcome to Email Buster!\nUse the left/right arrow keys to move." ,
+            { 
+                fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
+                fontSize: "35px",
+                color: "#000000",
+                align: "center",
+            }).setOrigin(0.5,0)).setName("tutorialText");
+        this.tutorialText = this.layer_text.getByName("tutorialText");
     }
 
     update(time, delta) {
@@ -155,15 +164,19 @@ class Pixelroom extends Phaser.Scene {
         if(complete === 1)
         {
             this.cameras.main.fadeFrom(200, 20, 20, 20, true);
-            this.shopBG = this.add.rectangle(0, 0, 1200, 900, 0x202020).setOrigin(0,0);
-            this.nextDayButton = new Button (this, "nextday_button", 500, 620, this.closeShopMenu)
-            this.dayOverText = this.add.text(600, 230, "You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\n\n\n\n\nContinue" ,
+            this.layer_shop.add(this.add.rectangle(0, 0, 1200, 900, 0x202020).setOrigin(0,0)).setName("shopBG");
+            this.shopBG = this.layer_shop.getByName("shopBG");
+            this.layer_shop.add(new Button (this, "nextday_button", 500, 620, this.closeShopMenu)).setName("nextDayButton");
+            this.nextDayButton = this.layer_shop.getByName("nextDayButton");
+            this.nextDayButton.startButton.setDepth(100000); //I just wanna display this on top
+            this.layer_shop.add(this.add.text(600, 230, "You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\n\n\n\n\nContinue" ,
             { 
                 fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
                 fontSize: "40px",
                 color: "#ffffff",
                 align: "center",
-            }).setOrigin(0.5,0);
+            }).setOrigin(0.5,0)).setName("dayOverText");
+            this.dayOverText = this.layer_shop.getByName("dayOverText");
         }
     }
 
@@ -172,25 +185,63 @@ class Pixelroom extends Phaser.Scene {
         this.nextDayButton._removeButton();
         this.shopBG.destroy();
         this.dayOverText.destroy();
+        this.layer_shop.removeAll();
         this.cameras.main.fadeFrom(200, 20, 20, 20, true);
         this.dayNumber++;
         this.dayOver = false;
         this.playerPaused = false;
+        this.upgradeOffice();
         this.removeEndOfDayEvent();
+    }
+
+    upgradeOffice() //each time this is run, the office is upgraded 1 stage
+    {
+        if(this.officeLevel === 0)
+        {
+            this.layer_plant.add(this.add.sprite(0, 0, "Pixelroom_Plant").setOrigin(0, 0));
+            this.officeLevel++;
+        }
+        else if(this.officeLevel === 1)
+        {
+            this.layer_bg.replace(this.layer_bg.getAt(0), this.add.sprite(0, 0, "Pixelroom_BG_Upgrade").setOrigin(0, 0));
+            this.officeLevel++;
+        }
+        else if(this.officeLevel === 2)
+        {
+            this.layer_desk.replace(this.layer_desk.getAt(0), this.add.sprite(0, 0, "Pixelroom_Desk_Upgrade").setOrigin(0, 0));
+            this.officeLevel++;
+        }
+        else if(this.officeLevel === 3)
+        {
+            this.layer_window.add(this.add.sprite(0, 0, "Pixelroom_Window").setOrigin(0, 0));
+            this.officeLevel++;
+        }
+        else if(this.officeLevel === 4)
+        {
+            this.officeLevel++;
+        }
+        else if(this.officeLevel === 5)
+        {
+            this.officeLevel++;
+        }
     }
 
     endOfDayEvent(eventNumber) //runs the event, under the event number specified
     {
         if(eventNumber === 0) //the tutorial event, mainly used to prompt the player into leaving the room
         {
-            this.tutorialText = this.add.text(600, 250, "Nice job today! Looks like your shift is over.\nYou can head home now." ,
-            { 
-                fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
-                fontSize: "35px",
-                color: "#000000",
-                align: "center",
-            }).setOrigin(0.5,0);
-            this.npcSprite = this.add.sprite(845, this.floorheight, "Figure_Pink").setOrigin(0, 1).setScale(this.playerScale);
+            this.layer_text.add(
+                this.add.text(600, 250, "Nice job today! Looks like your shift is over.\nYou can head home now." ,
+                { 
+                    fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
+                    fontSize: "35px",
+                    color: "#000000",
+                    align: "center",
+                }).setOrigin(0.5,0)
+            ).setName("endOfDayText");
+            this.tutorialText = this.layer_text.getByName("endOfDayText");
+            this.layer_npc.add(this.add.sprite(845, this.floorheight, "Figure_Pink").setOrigin(0, 1).setScale(this.playerScale)).setName("npcSprite");
+            this.npcSprite = this.layer_npc.getByName("npcSprite");
         }
     }
 
