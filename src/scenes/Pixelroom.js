@@ -18,7 +18,8 @@ class Pixelroom extends Phaser.Scene {
         this.load.image("Figure", "./assets/single_sprites/Figure.png");
         this.load.image("Figure_Pink", "./assets/single_sprites/Figure_Pink.png");
         this.load.atlas("Arrow", "./assets/spritesheets/Arrow.png", "./assets/spritesheets/Arrow.json");
-        this.load.atlas("nextday_button", "./assets/spritesheets/nextday_button.png", "./assets/spritesheets/nextday_button.json"); //this one is used as a test button
+        this.load.atlas("nextday_button", "./assets/spritesheets/nextday_button.png", "./assets/spritesheets/nextday_button.json");
+        this.load.atlas("upgrade_button", "./assets/spritesheets/upgrade_button.png", "./assets/spritesheets/upgrade_button.json");
     }
 
     //runs once, after preload, just as the scene starts
@@ -174,7 +175,7 @@ class Pixelroom extends Phaser.Scene {
             this.layer_shop.add(new Button (this, "nextday_button", 500, 710, this.closeShopMenu, [])).setName("nextDayButton");
             this.nextDayButton = this.layer_shop.getByName("nextDayButton");
             this.nextDayButton.startButton.setDepth(100000); //I just wanna display this on top
-            this.layer_shop.add(new Button (this, "nextday_button", 500, 470, this.upgradeOffice, [])).setName("upgradeOfficeButton");
+            this.layer_shop.add(new Button (this, "upgrade_button", 500, 470, this.upgradeOffice, [])).setName("upgradeOfficeButton");
             this.upgradeOfficeButton = this.layer_shop.getByName("upgradeOfficeButton");
             this.upgradeOfficeButton.startButton.setDepth(100001);
             this.layer_shop.add(this.add.text(600, 130, `You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\nCurrent Money: ${this.moneyCount}\nUpgrade Cost: ${this.currentUpgradeCost}\n\nUpgrade Office\n\n\n\n\nContinue` ,
@@ -241,7 +242,7 @@ class Pixelroom extends Phaser.Scene {
         {
             this.officeLevel++;
         }*/
-        this.layer_shop.add(this.add.text(600, 130, `You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\nCurrent Money: ${this.moneyCount}\nUpgrade Cost: ${this.currentUpgradeCost}\n\nContinue\n\n\n\n\nUpgrade Office` ,
+        this.layer_shop.add(this.add.text(600, 130, `You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\nCurrent Money: ${this.moneyCount}\nUpgrade Cost: ${this.currentUpgradeCost}\n\nUpgrade Office\n\n\n\n\nContinue` ,
             { 
                 fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
                 fontSize: "40px",
