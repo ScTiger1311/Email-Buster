@@ -48,6 +48,8 @@ class Play extends Phaser.Scene {
         this.mailQueueLength = 6; //the length of the mail queue. Must be greater than fakeMailMinimumAmount
         this.fakeMailMinimumAmount = 2; //the minimum amount of fake mail in the queue. If the game generates less than this amount, automatically replaces random real mail with fake mail
         this.fakeMaxVal = 20; //determines the % chance of a fake mail
+
+
         this.nextDayButton = 0;
         this.startRound();
         this.tutorialSprite = this.add.sprite(0, 0, "Mail_Tutorial").setOrigin(0,0);

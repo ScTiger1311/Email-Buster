@@ -38,6 +38,9 @@ class Pixelroom extends Phaser.Scene {
                 repeat: -1,
             }
         )
+        this.moneyPerDay = 200; //how much money the player gets per day. 
+        this.upgradeCostIncrement = 100; //how much the cost of each successive office upgrade is. Also adds a random number 1-10 for giggles
+        this.currentUpgradeCost = 100; //how much the cost is, currently. Also sets the initial cost.
         this.officeLevel = 0; //the current level of the office. used in officeUpgrade()
         this.playerScale = 13; //the scale of the player sprite
         this.movespeed = 7; //in pixels per 1/60th of a second
@@ -46,6 +49,7 @@ class Pixelroom extends Phaser.Scene {
         this.justSwitchedFromPlayScene = false; 
         this.floorheight = 690;
         this.playerPaused = false;
+        this.moneyCount = 0; //tracks how much money the player has. Was originally intended to get bonus money from doing well in the email segments, but I don't have time to implement that. Instead, you get a fixed amount per day.
 
         this.layer_bg = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_BG_Default").setOrigin(0, 0)] ).setDepth(0);
         this.layer_border = this.add.layer( [this.add.sprite(0, 0, "Pixelroom_Border").setOrigin(0, 0)] ).setDepth(1);
@@ -163,13 +167,17 @@ class Pixelroom extends Phaser.Scene {
     {
         if(complete === 1)
         {
+            this.moneyCount += this.moneyPerDay;
             this.cameras.main.fadeFrom(200, 20, 20, 20, true);
             this.layer_shop.add(this.add.rectangle(0, 0, 1200, 900, 0x202020).setOrigin(0,0)).setName("shopBG");
             this.shopBG = this.layer_shop.getByName("shopBG");
-            this.layer_shop.add(new Button (this, "nextday_button", 500, 620, this.closeShopMenu)).setName("nextDayButton");
+            this.layer_shop.add(new Button (this, "nextday_button", 500, 710, this.closeShopMenu, [])).setName("nextDayButton");
             this.nextDayButton = this.layer_shop.getByName("nextDayButton");
             this.nextDayButton.startButton.setDepth(100000); //I just wanna display this on top
-            this.layer_shop.add(this.add.text(600, 230, "You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\n\n\n\n\nContinue" ,
+            this.layer_shop.add(new Button (this, "nextday_button", 500, 470, this.upgradeOffice, [])).setName("upgradeOfficeButton");
+            this.upgradeOfficeButton = this.layer_shop.getByName("upgradeOfficeButton");
+            this.upgradeOfficeButton.startButton.setDepth(100001);
+            this.layer_shop.add(this.add.text(600, 130, `You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\nCurrent Money: ${this.moneyCount}\nUpgrade Cost: ${this.currentUpgradeCost}\n\nUpgrade Office\n\n\n\n\nContinue` ,
             { 
                 fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
                 fontSize: "40px",
@@ -183,6 +191,7 @@ class Pixelroom extends Phaser.Scene {
     closeShopMenu()
     {
         this.nextDayButton._removeButton();
+        this.upgradeOfficeButton._removeButton();
         this.shopBG.destroy();
         this.dayOverText.destroy();
         this.layer_shop.removeAll();
@@ -190,40 +199,56 @@ class Pixelroom extends Phaser.Scene {
         this.dayNumber++;
         this.dayOver = false;
         this.playerPaused = false;
-        this.upgradeOffice();
         this.removeEndOfDayEvent();
     }
 
     upgradeOffice() //each time this is run, the office is upgraded 1 stage
     {
-        if(this.officeLevel === 0)
+        this.dayOverText.destroy();
+        if(this.officeLevel === 0 && this.moneyCount >= this.currentUpgradeCost)
         {
+            this.moneyCount -= this.currentUpgradeCost;
             this.layer_plant.add(this.add.sprite(0, 0, "Pixelroom_Plant").setOrigin(0, 0));
             this.officeLevel++;
+            this.currentUpgradeCost += this.upgradeCostIncrement + Math.floor(Math.random() * 10);
         }
-        else if(this.officeLevel === 1)
+        else if(this.officeLevel === 1 && this.moneyCount >= this.currentUpgradeCost)
         {
+            this.moneyCount -= this.currentUpgradeCost;
             this.layer_bg.replace(this.layer_bg.getAt(0), this.add.sprite(0, 0, "Pixelroom_BG_Upgrade").setOrigin(0, 0));
             this.officeLevel++;
+            this.currentUpgradeCost += this.upgradeCostIncrement + Math.floor(Math.random() * 10);
         }
-        else if(this.officeLevel === 2)
+        else if(this.officeLevel === 2 && this.moneyCount >= this.currentUpgradeCost)
         {
+            this.moneyCount -= this.currentUpgradeCost;
             this.layer_desk.replace(this.layer_desk.getAt(0), this.add.sprite(0, 0, "Pixelroom_Desk_Upgrade").setOrigin(0, 0));
             this.officeLevel++;
+            this.currentUpgradeCost += this.upgradeCostIncrement + Math.floor(Math.random() * 10);
         }
-        else if(this.officeLevel === 3)
+        else if(this.officeLevel === 3 && this.moneyCount >= this.currentUpgradeCost)
         {
+            this.moneyCount -= this.currentUpgradeCost;
             this.layer_window.add(this.add.sprite(0, 0, "Pixelroom_Window").setOrigin(0, 0));
             this.officeLevel++;
+            this.currentUpgradeCost = "MAX LEVEL";
         }
-        else if(this.officeLevel === 4)
+        /*else if(this.officeLevel === 4 && this.moneyCount >= this.currentUpgradeCost)   you can use these if you want to implement more office levels.
         {
             this.officeLevel++;
         }
-        else if(this.officeLevel === 5)
+        else if(this.officeLevel === 5 && this.moneyCount >= this.currentUpgradeCost)
         {
             this.officeLevel++;
-        }
+        }*/
+        this.layer_shop.add(this.add.text(600, 130, `You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\nCurrent Money: ${this.moneyCount}\nUpgrade Cost: ${this.currentUpgradeCost}\n\nContinue\n\n\n\n\nUpgrade Office` ,
+            { 
+                fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
+                fontSize: "40px",
+                color: "#ffffff",
+                align: "center",
+            }).setOrigin(0.5,0)).setName("dayOverText");
+            this.dayOverText = this.layer_shop.getByName("dayOverText");
     }
 
     endOfDayEvent(eventNumber) //runs the event, under the event number specified
