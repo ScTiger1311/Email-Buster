@@ -42,7 +42,10 @@ class Pixelroom extends Phaser.Scene {
         this.moneyPerDay = 200; //how much money the player gets per day. 
         this.upgradeCostIncrement = 100; //how much the cost of each successive office upgrade is. Also adds a random number 1-10 for giggles
         this.currentUpgradeCost = 100; //how much the cost is, currently. Also sets the initial cost.
-        this.officeLevel = 0; //the current level of the office. used in officeUpgrade()
+        this.plantLevel = 0;
+        this.bgLevel = 0;
+        this.deskLevel = 0;
+        this.windowLevel = 0;
         this.playerScale = 13; //the scale of the player sprite
         this.movespeed = 7; //in pixels per 1/60th of a second
         this.dayOver = false; //has the player checked their emails for today? true/false/"inShopMenu"
@@ -97,6 +100,10 @@ class Pixelroom extends Phaser.Scene {
             if(this.dayNumber === 0) //the code that runs the end of day events
             {
                 this.delayedCallTimer = this.time.delayedCall(950, this.endOfDayEvent, [0], this);
+            }
+            else if(this.dayNumber === 1)
+            {
+                this.delayedCallTimer = this.time.delayedCall(950, this.endOfDayEvent, [1], this);
             }
         }
 
@@ -175,10 +182,40 @@ class Pixelroom extends Phaser.Scene {
             this.layer_shop.add(new Button (this, "nextday_button", 500, 710, this.closeShopMenu, [])).setName("nextDayButton");
             this.nextDayButton = this.layer_shop.getByName("nextDayButton");
             this.nextDayButton.startButton.setDepth(100000); //I just wanna display this on top
-            this.layer_shop.add(new Button (this, "upgrade_button", 500, 470, this.upgradeOffice, [])).setName("upgradeOfficeButton");
-            this.upgradeOfficeButton = this.layer_shop.getByName("upgradeOfficeButton");
-            this.upgradeOfficeButton.startButton.setDepth(100001);
-            this.layer_shop.add(this.add.text(600, 130, `You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\nCurrent Money: ${this.moneyCount}\nUpgrade Cost: ${this.currentUpgradeCost}\n\nUpgrade Office\n\n\n\n\nContinue` ,
+
+            //upgrade Plant
+            if(this.plantLevel === 0)
+            {
+                this.layer_shop.add(new Button (this, "upgrade_button", 300, 375, this.upgradeOffice, ["Plant"])).setName("upgradePlantButton");
+                this.upgradePlantButton = this.layer_shop.getByName("upgradePlantButton");
+                this.upgradePlantButton.startButton.setDepth(100001);
+            }
+
+            //upgrade BG
+            if(this.bgLevel === 0)
+            {
+                this.layer_shop.add(new Button (this, "upgrade_button", 700, 375, this.upgradeOffice, ["BG"])).setName("upgradeBGButton");
+                this.upgradeBGButton = this.layer_shop.getByName("upgradeBGButton");
+                this.upgradeBGButton.startButton.setDepth(100002);
+            }
+            
+            //upgrade Desk
+            if(this.deskLevel === 0)
+            {
+                this.layer_shop.add(new Button (this, "upgrade_button", 300, 515, this.upgradeOffice, ["Desk"])).setName("upgradeDeskButton");
+                this.upgradeDeskButton = this.layer_shop.getByName("upgradeDeskButton");
+                this.upgradeDeskButton.startButton.setDepth(100003);
+            }
+            
+            //upgrade Window
+            if(this.windowLevel === 0)
+            {
+                this.layer_shop.add(new Button (this, "upgrade_button", 700, 515, this.upgradeOffice, ["Window"])).setName("upgradeWindowButton");
+                this.upgradeWindowButton = this.layer_shop.getByName("upgradeWindowButton");
+                this.upgradeWindowButton.startButton.setDepth(100004);
+            }
+            
+            this.layer_shop.add(this.add.text(600, 40, `You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\nCurrent Money: ${this.moneyCount}\nUpgrade Cost: ${this.currentUpgradeCost}\n\nUpgrade Plant      Upgrade Background\n\n\nUpgrade Desk      Upgrade Window\n\n\n\nContinue` ,
             { 
                 fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
                 fontSize: "40px",
@@ -191,8 +228,11 @@ class Pixelroom extends Phaser.Scene {
 
     closeShopMenu()
     {
+        if(this.plantLevel === 0){this.upgradePlantButton._removeButton();} 
+        if(this.bgLevel === 0){this.upgradeBGButton._removeButton();} 
+        if(this.deskLevel === 0){this.upgradeDeskButton._removeButton();} 
+        if(this.windowLevel === 0){this.upgradeWindowButton._removeButton();} 
         this.nextDayButton._removeButton();
-        this.upgradeOfficeButton._removeButton();
         this.shopBG.destroy();
         this.dayOverText.destroy();
         this.layer_shop.removeAll();
@@ -203,36 +243,40 @@ class Pixelroom extends Phaser.Scene {
         this.removeEndOfDayEvent();
     }
 
-    upgradeOffice() //each time this is run, the office is upgraded 1 stage
+    upgradeOffice(partToUpgrade) //each time this is run, the office is upgraded 1 stage
     {
         this.dayOverText.destroy();
-        if(this.officeLevel === 0 && this.moneyCount >= this.currentUpgradeCost)
+        if(partToUpgrade === "Plant" && this.moneyCount >= this.currentUpgradeCost && this.plantLevel === 0)
         {
             this.moneyCount -= this.currentUpgradeCost;
             this.layer_plant.add(this.add.sprite(0, 0, "Pixelroom_Plant").setOrigin(0, 0));
-            this.officeLevel++;
+            this.plantLevel++;
             this.currentUpgradeCost += this.upgradeCostIncrement + Math.floor(Math.random() * 10);
+            this.upgradePlantButton._removeButton();
         }
-        else if(this.officeLevel === 1 && this.moneyCount >= this.currentUpgradeCost)
+        else if(partToUpgrade === "BG" && this.moneyCount >= this.currentUpgradeCost && this.bgLevel === 0)
         {
             this.moneyCount -= this.currentUpgradeCost;
             this.layer_bg.replace(this.layer_bg.getAt(0), this.add.sprite(0, 0, "Pixelroom_BG_Upgrade").setOrigin(0, 0));
-            this.officeLevel++;
+            this.bgLevel++;
             this.currentUpgradeCost += this.upgradeCostIncrement + Math.floor(Math.random() * 10);
+            this.upgradeBGButton._removeButton();
         }
-        else if(this.officeLevel === 2 && this.moneyCount >= this.currentUpgradeCost)
+        else if(partToUpgrade === "Desk" && this.moneyCount >= this.currentUpgradeCost && this.deskLevel === 0)
         {
             this.moneyCount -= this.currentUpgradeCost;
             this.layer_desk.replace(this.layer_desk.getAt(0), this.add.sprite(0, 0, "Pixelroom_Desk_Upgrade").setOrigin(0, 0));
-            this.officeLevel++;
+            this.deskLevel++;
             this.currentUpgradeCost += this.upgradeCostIncrement + Math.floor(Math.random() * 10);
+            this.upgradeDeskButton._removeButton();
         }
-        else if(this.officeLevel === 3 && this.moneyCount >= this.currentUpgradeCost)
+        else if(partToUpgrade === "Window" && this.moneyCount >= this.currentUpgradeCost && this.windowLevel === 0)
         {
             this.moneyCount -= this.currentUpgradeCost;
             this.layer_window.add(this.add.sprite(0, 0, "Pixelroom_Window").setOrigin(0, 0));
-            this.officeLevel++;
-            this.currentUpgradeCost = "MAX LEVEL";
+            this.windowLevel++;
+            this.currentUpgradeCost += this.upgradeCostIncrement + Math.floor(Math.random() * 10);
+            this.upgradeWindowButton._removeButton();
         }
         /*else if(this.officeLevel === 4 && this.moneyCount >= this.currentUpgradeCost)   you can use these if you want to implement more office levels.
         {
@@ -242,7 +286,7 @@ class Pixelroom extends Phaser.Scene {
         {
             this.officeLevel++;
         }*/
-        this.layer_shop.add(this.add.text(600, 130, `You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\nCurrent Money: ${this.moneyCount}\nUpgrade Cost: ${this.currentUpgradeCost}\n\nUpgrade Office\n\n\n\n\nContinue` ,
+        this.layer_shop.add(this.add.text(600, 40, `You head home after a long day of work.\nYou wake the next day feeling re-engergized and ready for more.\n\nCurrent Money: ${this.moneyCount}\nUpgrade Cost: ${this.currentUpgradeCost}\n\nUpgrade Plant      Upgrade Background\n\n\nUpgrade Desk      Upgrade Window\n\n\n\nContinue` ,
             { 
                 fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
                 fontSize: "40px",
@@ -258,6 +302,22 @@ class Pixelroom extends Phaser.Scene {
         {
             this.layer_text.add(
                 this.add.text(600, 250, "Nice job today! Looks like your shift is over.\nYou can head home now." ,
+                { 
+                    fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
+                    fontSize: "35px",
+                    color: "#000000",
+                    align: "center",
+                }).setOrigin(0.5,0)
+            ).setName("endOfDayText");
+            this.tutorialText = this.layer_text.getByName("endOfDayText");
+            this.layer_npc.add(this.add.sprite(845, this.floorheight, "Figure_Pink").setOrigin(0, 1).setScale(this.playerScale)).setName("npcSprite");
+            this.npcSprite = this.layer_npc.getByName("npcSprite");
+        }
+
+        else if(eventNumber === 1)
+        {
+            this.layer_text.add(
+                this.add.text(600, 250, "If you haven't already noticed, you can use\n MegaRapidBucks that you get after each\nshift to upgrade the look of your office!" ,
                 { 
                     fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
                     fontSize: "35px",
