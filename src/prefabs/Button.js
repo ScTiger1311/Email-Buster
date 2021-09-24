@@ -23,6 +23,7 @@ class Button extends Phaser.GameObjects.Sprite {
         this.startButton.on('pointerdown', function () { this.mouseButton = true; }, this)
         this.startButton.on('pointerup', function () { this.mouseButton = false; }, this)
         
+        //runs once per frame
         let update = () => {
             /*try 
             {*/

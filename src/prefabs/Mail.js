@@ -36,7 +36,7 @@ class Mail extends Phaser.GameObjects.Sprite {
         if
         (
             this.imagePath === mailToCompare.imagePath &&
-            this.imagePath === mailToCompare.previewImagePath &&
+            this.previewImagePath === mailToCompare.previewImagePath &&
             this.legitimate === mailToCompare.legitimate &&
             this.reason1 === mailToCompare.reason1 &&
             this.reason2 === mailToCompare.reason2 &&
