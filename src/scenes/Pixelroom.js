@@ -25,6 +25,13 @@ class Pixelroom extends Phaser.Scene {
     //runs once, after preload, just as the scene starts
     create() {
         console.log("entered the Pixelroom.js scene");
+
+        this.moneyPerDay = 200; //how much money the player gets per day. 
+        this.upgradeCostIncrement = 100; //how much the cost of each successive office upgrade is. Also adds a random number 1-10 for giggles
+        this.currentUpgradeCost = 100; //how much the cost is, currently. Also sets the initial cost.
+        this.playerScale = 13; //the scale of the player sprite
+        this.movespeed = 7; //in pixels per 1/60th of a second
+
         this.anims.create(
             {
                 key: "Arrow_Anim",
@@ -39,19 +46,14 @@ class Pixelroom extends Phaser.Scene {
                 repeat: -1,
             }
         )
-        this.moneyPerDay = 200; //how much money the player gets per day. 
-        this.upgradeCostIncrement = 100; //how much the cost of each successive office upgrade is. Also adds a random number 1-10 for giggles
-        this.currentUpgradeCost = 100; //how much the cost is, currently. Also sets the initial cost.
         this.plantLevel = 0;
         this.bgLevel = 0;
         this.deskLevel = 0;
         this.windowLevel = 0;
-        this.playerScale = 13; //the scale of the player sprite
-        this.movespeed = 7; //in pixels per 1/60th of a second
         this.dayOver = false; //has the player checked their emails for today? true/false/"inShopMenu"
         this.dayNumber = 0; //0 is the first day, and includes the whole tutorial
         this.justSwitchedFromPlayScene = false; 
-        this.floorheight = 690;
+        this.floorheight = 690; //the y pixel the floor is at. Basically just affects where the player is located vertically.
         this.playerPaused = false;
         this.moneyCount = 0; //tracks how much money the player has. Was originally intended to get bonus money from doing well in the email segments, but I don't have time to implement that. Instead, you get a fixed amount per day.
 
