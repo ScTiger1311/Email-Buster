@@ -344,7 +344,7 @@ class Play extends Phaser.Scene {
         this.numCorrect = this.calculateNumCorrect(this.emailQueueCopy, this.answerQueue);
         
         this.resultsTextBox = this.add.text(0, 0,   
-            `Day over. \n\nYour score: ${this.score * 1000}/${this.mailQueueLength * 1000}\n\nIncorrect deductions: ${this.mailQueueLength - this.numCorrect}`, //This is a template literal https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+            `Day over. \n\nYour score: ${this.score * 1000}/${this.mailQueueLength * 2 * 1000}\n\nIncorrect deductions: ${this.mailQueueLength - this.numCorrect}`, //This is a template literal https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
         { 
             fontFamily: 'Tahoma, "Goudy Bookletter 1911", Times, serif',
             fontSize: "30px",
@@ -359,10 +359,13 @@ class Play extends Phaser.Scene {
 
     showIncorrectEmails(queue)
     {
-        this.resultsTextBox.destroy();
-        this.mailSprite = this.add.sprite(0, 0, queue[0].imagePath).setOrigin(0,0);
-        this.showIncorrectEmailsButton._removeButton();
-        this.nextIncorrectEmailButton = new Button(this, "nextemail_button", 450, 600, this.nextIncorrectEmail, [this.incorrectEmailsArray]);
+        if(this.incorrectEmailsArray.length > 1) //then show the next one
+        {
+            this.resultsTextBox.destroy();
+            this.mailSprite = this.add.sprite(0, 0, queue[0].imagePath).setOrigin(0,0);
+            this.showIncorrectEmailsButton._removeButton();
+            this.nextIncorrectEmailButton = new Button(this, "nextemail_button", 450, 600, this.nextIncorrectEmail, [this.incorrectEmailsArray]);
+        }
     }
 
     nextIncorrectEmail(queue)
