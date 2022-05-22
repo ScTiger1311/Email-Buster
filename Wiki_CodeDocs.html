@@ -1,0 +1,464 @@
+<html data-page="8"
+        data-canvas="5"
+        data-site="/sites/IntuitiveE-Learning"
+        data-list="19:f047acf1b5a247fca5e95dded1907f71@thread.tacv2_wiki"
+        data-tabId="tab::1cabb07f-47e6-4999-989f-4c49a0d2c2ec"
+        data-slug="Animation and Assets"
+        data-threadId="19:f047acf1b5a247fca5e95dded1907f71@thread.tacv2"<body><h3 class="wiki-mht-note">This wiki page lost its pretty formatting due to an "export" from Microsoft Teams (which I had to use a workaround for), in order for it to be viewable here. The actual version was much more readable, but the content is the same.</h3>
+<h1 id="wiki-mht-page-title-8">Code Docs</h1>
+<h3 id="wiki-mht-section-title-9">Intro</h3>
+<p id="wiki-mht-section-content-9"><div>The following documentation assumes you already know ES6 Javascript.</div>
+
+<div>It describes each function and the basic structure of every class used in Email Buster</div>
+
+<div> </div>
+
+<div>Email Buster uses an open source game framework called <a href="https://www.phaser.io/phaser3" rel="noreferrer noopener" target="_blank" title="https://www.phaser.io/phaser3">Phaser 3.</a></div>
+
+<div> </div>
+
+<div>It's documentation is a bit bare bones, it provides all the functions and describes them, but rarely ever gives examples.</div>
+
+<div>Fortunately, <a href="https://rexrainbow.github.io/phaser3-rex-notes/docs/site/index.html" rel="noreferrer noopener" target="_blank" title="https://rexrainbow.github.io/phaser3-rex-notes/docs/site/index.html">Notes of Phaser 3</a> provides examples of many commonly used things. Only one or two Phaser 3 functions used in the whole of Email buster are not given any explanation.</div>
+
+<div> </div>
+
+<div> </div>
+</p>
+<h3 id="wiki-mht-section-title-14">main.js</h3>
+<p id="wiki-mht-section-content-14"><div>Main.js is a really simple script. It does two major things</div>
+
+<ol>
+	<li>Defines the game window dimensions</li>
+	<li>Defines all the scenes of the game
+	<ol>
+		<li>The first scene in the array of scenes is the one the game will start on. Other than that order does not matter</li>
+	</ol>
+	</li>
+</ol>
+</p>
+<h3 id="wiki-mht-section-title-15">Mail.js</h3>
+<p id="wiki-mht-section-content-15"><div>This is a simple class file, not a scene. It's basically just the class that the game uses to store an email, which contains all of the data and a few useful functions. By defining a mail object in the proper location in Play.js, you can easily add more emails to the pool the game picks from. More detail in the Content Creation part of this wiki, and the Play.js documetation.</div>
+
+<blockquote itemprop="copy-paste-block">
+<div>
+<div style="font-size:14px;">
+<div><span>new</span><span> </span><span>Mail</span><span>(</span><span>this</span><span>, </span><span>&quot;./assets/single_sprites/Mail/RealEmail_001.png&quot;</span><span>, </span><span>&quot;./assets/single_sprites/Mail/RealEmail_Preview_001.png&quot;</span><span>, </span><span>true</span><span>, </span><span>false</span><span>, </span><span>false</span><span>, </span><span>false</span><span>, </span><span>false</span><span>),</span></div>
+</div>
+</div>
+</blockquote>
+
+<div itemprop="copy-paste-block">
+<div style="font-size:14px;">
+<div><strong><span> </span><span>imagePath</span></strong></div>
+
+<div style="margin-left:40px;"><span></span><span>the filepath to the mail image</span></div>
+
+<div><strong><span>previewImagePath</span></strong></div>
+
+<div style="margin-left:40px;">the filepath to the preview thumbnail image</div>
+
+<div><strong><span>legitimate</span></strong><span></span></div>
+
+<div style="margin-left:40px;"><span>boolean, true=real email, false=phishing email</span></div>
+
+<div><strong><span>reason1</span></strong><span></span></div>
+
+<div style="margin-left:40px;"><span>Sender is posing as someone they aren't</span></div>
+
+<div><strong><span>reason2</span></strong></div>
+
+<div style="margin-left:40px;"><span>Email contains link to a suspicious website</span></div>
+
+<div><strong><span>reason3</span></strong></div>
+
+<div style="margin-left:40px;"><span></span><span>Email requests personal info</span></div>
+
+<div><strong><span>reason4</span></strong></div>
+
+<div style="margin-left:40px;"><span></span><span>Email contains suspicious attachment</span></div>
+</div>
+</div>
+
+<div> </div>
+
+<div><strong>toString() </strong></div>
+
+<div>///Returns a string with some useful debugging info, basically only ever used for that.</div>
+
+<div> </div>
+
+<div><b>scoreCompareTo(mailToCompare)</b></div>
+
+<div>//used to score the player once their inbox is empty for the day.</div>
+
+<div itemprop="copy-paste-block">Returns 2</div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;">if all of the below items match on the calling object and the comparing object are strictly equal (===)</div>
+
+<ul>
+	<li itemprop="copy-paste-block" style="margin-left:40px;">imagePath</li>
+	<li itemprop="copy-paste-block" style="margin-left:40px;">previewImagePath</li>
+	<li itemprop="copy-paste-block" style="margin-left:40px;">reason1</li>
+	<li itemprop="copy-paste-block" style="margin-left:40px;">reason2</li>
+	<li itemprop="copy-paste-block" style="margin-left:40px;">reason3</li>
+	<li itemprop="copy-paste-block" style="margin-left:40px;">reason4</li>
+</ul>
+
+<div itemprop="copy-paste-block">Returns 1</div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;">if &lt;legitimate&gt; matches, but the reasons 1-4 don't completely line up</div>
+
+<div itemprop="copy-paste-block">Returns 0</div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;">if &lt;legitimate does not match&gt;</div>
+</p>
+<h3 id="wiki-mht-section-title-16">Button.js</h3>
+<p id="wiki-mht-section-content-16"><div>A probably-more-complex than it needs to be solution for creating a button in 1 line that runs a function in your scene, with arguments of your choosing.</div>
+
+<div itemprop="copy-paste-block">
+<div style="font-size:14px;">
+<blockquote>
+<div><span>this</span><span>.</span><span>replyButton</span><span> = </span><span>new</span><span> </span><span>Button</span><span>(</span><span>this</span><span>, </span><span>&quot;clearbutton_darken&quot;</span><span>, </span><span>1002</span><span>, </span><span>2</span><span>, </span><span>this</span><span>.</span><span>replyToMail</span><span>, [/*args go here*/]);</span></div>
+</blockquote>
+</div>
+</div>
+
+<div><b>scene_</b></div>
+
+<div style="margin-left:40px;">The scene to run it in. Usually just pass &lt;this&gt;, but you might be able to use this more powerfully.'</div>
+
+<div><b>atlas</b></div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;">The sprite atlas the button uses to animate. For more info, see the<b> &quot;</b>How to change animated sprites/buttons visual appearance.&quot; section of the content creation page.</div>
+
+<div itemprop="copy-paste-block"><strong>funct</strong></div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;">The function to run. Don't place parenthesis after it (see example at the top of this section)</div>
+
+<div itemprop="copy-paste-block"><strong>args</strong></div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;">An array containing the arguments of the function. This requires designing the function to interpret an array rather than individual named arguments.</div>
+
+<div itemprop="copy-paste-block">
+<div itemprop="copy-paste-block" style="font-size:14px;"><strong>x</strong></div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;margin-left:40px;">The x coordinate on the stage of the upper left corner of the button.</div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;"><strong>y</strong></div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;margin-left:40px;">The y coordinate on the stage of the upper left corner of the button.</div>
+</div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;"> </div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;"> </div>
+
+<div itemprop="copy-paste-block"><strong>_removeButton()</strong></div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;">Removes the button and all related things from the stage. <em>MAKE SURE TO USE THIS INSTEAD OF</em> GameObject.destroy()</div>
+</p>
+<h3 id="wiki-mht-section-title-19">Checkbox.js</h3>
+<p id="wiki-mht-section-content-19"><div>An offshoot of Button.js. Works very similarly, but instead of executing a function, it just stores a boolean value which changes whether or not it's pressed down.</div>
+
+<div> </div>
+
+<div itemprop="copy-paste-block">
+<div style="font-size:14px;"><span><b>scene_</b></span></div>
+
+<div style="font-size:14px;margin-left:40px;">The scene to run it in. Usually just pass &lt;this&gt;, but you might be able to use this more powerfully.'</div>
+
+<div style="font-size:14px;"><span><b>atlas</b></span></div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;margin-left:40px;">The sprite atlas the button uses to animate. For more info, see the<span><b> &quot;</b></span>How to change animated sprites/buttons visual appearance.&quot; section of the content creation page.</div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;"><strong>x</strong></div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;margin-left:40px;">The x coordinate on the stage of the upper left corner of the checkbox.</div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;"><strong>y</strong></div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;margin-left:40px;">The y coordinate on the stage of the upper left corner of the checkbox.</div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;margin-left:40px;"> </div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;margin-left:40px;"> </div>
+
+<div itemprop="copy-paste-block" style="font-size:14px;">
+<div itemprop="copy-paste-block"><strong>_removeCheckbox()</strong></div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;">Removes the checkbox and all related things from the stage. <em>MAKE SURE TO USE THIS INSTEAD OF</em> GameObject.destroy()</div>
+</div>
+</div>
+</p>
+<h3 id="wiki-mht-section-title-20">PixelRoom.js</h3>
+<p id="wiki-mht-section-content-20"><div>This is the the scene that is loaded up at the start of the game, and handles the player moving between their desk and the door home, all NPC events, and the shop, which can be used to upgrade the office.</div>
+
+<div> </div>
+
+<div><b>preload() </b>//runs automatically when the scene starts</div>
+
+<div style="margin-left:40px;">loads all assets guaranteed to be used in the scene. A possible improvement here would be adding a loading screen, but currently it's so short, even on low end machines, that I decided it wasn't work the effort.</div>
+
+<div style="margin-left:40px;"> </div>
+
+<div><strong>create() </strong>//runs automatically after preload finishes</div>
+
+<div style="margin-left:40px;">This function basically lays the groundwork for the scene. It places all initial objects and sprites, and defines some important variables. It doesn't really have any complex code in it, but I'll go over the useful variables defined inside</div>
+
+<div style="margin-left:40px;"><strong>this.moneyPerDay</strong></div>
+
+<div style="margin-left:80px;">How much money the player gets per day. Adjust this to affect how long it takes to get all the upgrades (thus increasing the engagement period of the game)</div>
+
+<div style="margin-left:40px;"><strong>this.upgradeCostIncrement</strong></div>
+
+<div style="margin-left:80px;">How much the cost of each successive office upgrade is increased by. Also adds a random amount between 0-9. Increasing this will increase the amount of time it takes the player to get a fully upgraded office.</div>
+
+<div style="margin-left:40px;"><strong>this.currentUpgradeCost</strong></div>
+
+<div style="margin-left:80px;">How much the initial upgrade cost is. Also stores the current upgrade cost during runtime.</div>
+
+<div style="margin-left:40px;"><strong>this.playerScale</strong></div>
+
+<div style="margin-left:80px;">The visual scale of the player. Does not affect the hitbox. Does affect the size of a few other things, like other NPCs and the arrows that pop up above the player's head.</div>
+
+<div style="margin-left:40px;"><strong>this.moveSpeed</strong></div>
+
+<div style="margin-left:80px;">How fast the player moves. Not super important for a game like this, but don't make it too slow so the player is bored, or too fast so they don't see the NPC events before the day ends.</div>
+
+<div style="margin-left:80px;"> </div>
+
+<div><strong>update() </strong>//runs automatically once every frame. IMPORTANT NOTE. Many monitors have different refresh rates. Do <strong>not</strong> assume 60 fps</div>
+
+<div style="margin-left:40px;">update functions are extremely common in games, but are rarely used anywhere else. In Email Buster, it handles character movement mainly, as well as a few other minor things which probably could have been handled using events instead.</div>
+
+<div style="margin-left:40px;"> </div>
+
+<div style="margin-left:40px;">The main takeaway here if you plan on adjusting things is, ask yourself: &quot;If this code is run more or less times per second, will something speed up/slow down?&quot; If the answer is yes, multiply the movement/speed of the thing by deltaMultiplier, so that it moves at the same speed on any monitor's refresh rate.</div>
+
+<div style="margin-left:40px;"> </div>
+
+<div><strong>openShopMenu()</strong></div>
+
+<div style="margin-left:40px;">mainly just adds all the buttons/text to the end of day screen. Skips adding buttons to upgrade aspects if they've already been upgraded.</div>
+
+<div> </div>
+
+<div><strong>closeShopMenu()</strong></div>
+
+<div style="margin-left:40px;">properly removes everything from the shop menu, removes the end of day event, and fades back to the main game.</div>
+
+<div style="margin-left:40px;"> </div>
+
+<div><strong>upgradeOffice(partToUpgrade)</strong></div>
+
+<div itemprop="copy-paste-block" style="margin-left:40px;">takes the partToUpgrade as a string, upgrades it by replacing the sprite on that layer, increases the price of the next upgrade, and removes the button to upgrade it (since each upgrade can only be done once).</div>
+
+<div style="margin-left:40px;"> </div>
+
+<div><strong>endOfDayEvent(eventNumber)</strong></div>
+
+<div style="margin-left:40px;">Takes eventNumber as an integer, and runs the associated code for that event. Add more else ifs to make more events. Make sure to add an associated else if to removeEndOfDayEvent()</div>
+
+<div style="margin-left:40px;"> </div>
+
+<div><strong>removeEndOfDayEvent(eventNumber)</strong></div>
+
+<div style="margin-left:40px;">Takes eventNumber as an integer, and gracefully removes it that event. Look at the code in one of the prebuilt functions for an idea of what do to for this if you add your own end of day events.</div>
+</p>
+<h3 id="wiki-mht-section-title-21">Play.js</h3>
+<p id="wiki-mht-section-content-21"><div>This scene handles all of the logic and graphics for the email section of the game. </div>
+
+<div> </div>
+
+<div class="copy-paste-block" itemprop="copy-paste-block">
+<div style="font-size:14px;"><span><b>preload() </b></span>//runs automatically when the scene starts</div>
+
+<div style="font-size:14px;margin-left:40px;">loads all assets guaranteed to be used in the scene. A possible improvement here would be adding a loading screen, but currently it's so short, even on low end machines, that I decided it wasn't work the effort.</div>
+
+<div style="font-size:14px;"> </div>
+
+<div style="font-size:14px;">
+<div style="font-size:14px;"><span><strong>create() </strong></span>//runs automatically after preload finishes</div>
+
+<div style="font-size:14px;margin-left:40px;">This function combined with startRound(), lay the groundwork for the scene. the main difference is create only runs once, upon the first time the player opens the email portion. It then runs startRound() as well. On every successive day, only startRound() is run, because the scene is just paused and resumed during the pixelRoom portions between. This allows the emails to not be repeated.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;margin-left:40px;">Useful variables inside this function include:</div>
+
+<div style="font-size:14px;margin-left:40px;"><strong>this.unusedMailReal</strong></div>
+
+<div style="font-size:14px;margin-left:80px;">defines the whole list of Mail object that are <strong><strong>not</strong></strong> phishing emails, used by the game. add more things here to adjust the pool of real mail used by the game</div>
+
+<div style="font-size:14px;margin-left:40px;"><b>this.unusedMailFake</b></div>
+
+<div style="font-size:14px;margin-left:80px;">defines the whole list of Mail object that <strong><strong>are</strong></strong> phishing emails, used by the game. add more things here to adjust the pool of fake mail used by the game</div>
+
+<div style="font-size:14px;margin-left:40px;"><b>this.mailQueueLength</b></div>
+
+<div style="font-size:14px;margin-left:80px;">How much mail is is given to the player per day.</div>
+
+<div style="font-size:14px;margin-left:40px;"><b>this.fakeMailMinimumAmount</b></div>
+
+<div style="font-size:14px;margin-left:80px;">If there is less than this amount of fake mail in the mail queue, increase the amount of fake mail to this amount.</div>
+
+<div style="font-size:14px;margin-left:40px;"><b>this.fakeMaxVal</b></div>
+
+<div style="font-size:14px;margin-left:80px;">The percent chance for each mail generated of that mail being a phishing email.</div>
+
+<div style="font-size:14px;margin-left:80px;"> </div>
+
+<div style="font-size:14px;margin-left:40px;"><b>this.tutorialSprite</b></div>
+
+<div style="font-size:14px;margin-left:80px;">Defines the sprite used to teach the player about the reply and report button. Only shows on the first day.</div>
+
+<div style="font-size:14px;margin-left:80px;"> </div>
+
+<div style="font-size:14px;"><b>startRound()</b></div>
+
+<div style="font-size:14px;margin-left:40px;">Runs after create() is done, and also every time the player goes into the computer after the first time. Refreshes/resets all visual aspects but does not reset the used/unused aspects.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>update()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Currently does nothing. Update is not needed in this scene, but I left this in in case it was. Uncomment the </div>
+
+<blockquote>
+<div style="font-size:14px;margin-left:40px;">
+<div style="font-size:14px;">
+<div><span>//let deltaMultiplier = (delta / 16.66667); //for refresh rate indepence</span></div>
+</div>
+</div>
+</blockquote>
+
+<div style="font-size:14px;margin-left:40px;">If it is decided to actually use this function.</div>
+
+<div style="font-size:14px;"> </div>
+
+<div style="font-size:14px;"><strong>generateMailQueue()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">takes queueLength as an int, and fakeMailMin as an int. Generates an array of Mail objects based on that. The bulk of this is making sure there are no duplicates, unless the unused mail is used up in the generation of that array.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;margin-left:40px;">Calls this.chooseFakeMail() or this.chooseRealMail() multiple times.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>replyToMail()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Code that runs whenever the user presses reply. All it does is add a Mail object to the answer queue that's a clone of the currently open email, but with legitimate set to true.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>confirmReportMail()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Code that runs when the user presses the confirm button in the report menu. It creates a new mail object with legitimate set to false, and the reasons set to what is currently checked off in the report menu, then pushes that to the answer queue.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>chooseFakeMail()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Returns an unused scam email, and puts that Mail object into the used mail array. If there are no more unused emails, swaps the used and unused arrays before choosing a mail.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;">
+<div style="font-size:14px;"><strong>chooseRealMail()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Returns an unused real email, and puts that Mail object into the used mail array. If there are no more unused emails, swaps the used and unused arrays before choosing a mail.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>showNewMail()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">updates the text on screen so the newest mail is shown, and the preview bar shows the proper emails.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>nextMailInQueue(queue)</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Takes queue as an array, returns the first element, and removes that Mail object, and ends the game if there are no more objects left in queue. Also destroys the old preview bar, so a new one can be generated.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>loadMailPreviews(queue)</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Takes queue as an array, and loads their preview sprites so they can be displayed on the fly. Then, shows the mail previews. Runs at the beginning of each day.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>showMailPreviews(queue)</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">The code that handles the placement of all the mail previews on the stage. Contains variables for adjusting the spacing and the location of the upper left corner of the first (top) mail in the queue.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>destroyOldPreviews()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Basically just loops through the previews and destroys them all, so they can be repopulated immediately.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>endRound()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Runs when the mail queue is empty. Removes the gameplay elements from the stage, shows the score and num correct. Shows buttons that either allow the player to continue to the next day, or see which ones they got wrong.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>showIncorrectEmails(queue)</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">shows the first incorrect email, removes the score/num correct, and replaces the show incorrect emails button with a new button that merely progresses to the next incorrect email: see nextIncorrectEmail(queue)</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>nextIncorrectEmail(queue)</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">progresses to the next element in the incorrect email array, and removes the first element. If there's no more incorrect emails, progress to the end game screen.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>calculateScore(mailList, answerList)</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Takes mailList and answerList, both as arrays. From there, compares each individual answer with it's corresponding mail in the originally generated queue of mail, using Mail.scoreCompareTo().</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;margin-left:40px;">Then, returns the total score.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>calculateNumCorrect(mailList, answerList)</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">Takes mailList and answerList, both as arrays. From there, compares each individual answer with it's corresponding mail in the originally generated queue of mail, using a basic == comparator. This way, the &quot;reasons to report&quot; are not factored in.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;margin-left:40px;">Then, returns the total amount of mails correct.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>showReportMenu()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">if the report menu isn't visible, then this function will draw the report menu based on a bunch of hard-coded values. Done this way because Phaser 3 has no GUI based editing.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>hideReportMenu()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">A collection of code that gracefully removes all elements of the report menu from the stage.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+
+<div style="font-size:14px;"><strong>endEmailSegment()</strong></div>
+
+<div style="font-size:14px;margin-left:40px;">very simple code that resets the scene to its original state, and then switches back to PixelRoom.js as the current scene.</div>
+
+<div style="font-size:14px;margin-left:40px;"> </div>
+</div>
+</div>
+</div>
+</p>
+</body></html>

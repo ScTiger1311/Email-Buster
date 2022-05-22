@@ -1,0 +1,91 @@
+<html data-page="6"
+        data-canvas="5"
+        data-site="/sites/IntuitiveE-Learning"
+        data-list="19:f047acf1b5a247fca5e95dded1907f71@thread.tacv2_wiki"
+        data-tabId="tab::1cabb07f-47e6-4999-989f-4c49a0d2c2ec"
+        data-slug="Animation and Assets"
+        data-threadId="19:f047acf1b5a247fca5e95dded1907f71@thread.tacv2"<body><h3 class="wiki-mht-note">This wiki page lost its pretty formatting due to an "export" from Microsoft Teams (which I had to use a workaround for), in order for it to be viewable here. The actual version was much more readable, but the content is the same.</h3>
+<h1 id="wiki-mht-page-title-6">Content Creation</h1>
+<h3 id="wiki-mht-section-title-7">How to add more emails</h3>
+<p id="wiki-mht-section-content-7"><div>The following guide makes no assumptions about whatever form of version control you are using, as I currently don't know. Make sure you have a copy of the source code, and a way to merge any changes you might make.</div>
+
+<div> </div>
+
+<div>This guide may seem intimidating, but I tried to document things very clearly. It should take no more than ~8 minutes per email assuming you know what to write, and understand the workflow</div>
+
+<div> </div>
+
+<ol itemprop="copy-paste-block">
+	<li>If you haven't already, download the<span style="color:#ef6950;"> <a href="https://secusolutionsca.sharepoint.com/sites/IntuitiveE-Learning/Shared%20Documents/Animation/Emails%20and%20Templates%20Master%20Files.zip" rel="noreferrer noopener" target="_blank" title="https://secusolutionsca.sharepoint.com/sites/intuitivee-learning/shared%20documents/animation/emails%20and%20templates%20master%20files.zip">Emails and Templates Master Files</a> </span>zip folder. </li>
+	<li>The two files you need are located at
+	<ol>
+		<li>.\Emails\Template\Mail.psd</li>
+		<li>.\Emails\Template\Preview.psd</li>
+	</ol>
+	</li>
+	<li>Open Mail.psd in Photoshop
+	<ol>
+		<li>Select <strong>Save As</strong>, and depending on if you want it to be a fake or real email, name it either FakeEmail_XXX.psd or RealEmail_XXX.psd, where XXX is replaced with any currently unused number.</li>
+		<li>Edit the text however you like.</li>
+		<li>You can also add images if you really want to.</li>
+		<li>When you're done save the .psd, then select <strong>File-&gt;Export-&gt;Export As...</strong> and export it as a PNG with the same name as the psd. Make all layers except the email content are hidden in the preview, the background should be transparent.</li>
+	</ol>
+	</li>
+	<li>Open Preview.psd in Photoshop.
+	<ol>
+		<li>Select <strong>Save As</strong>, and depending on if you want it to be a fake or real email, name it either FakeEmail_Preview_XXX.psd or RealEmail_Preview_XXX.psd where XXX is replaced with the corresponding number of the email the preview should be associated with.</li>
+		<li>Edit the text however you like</li>
+		<li>When you're done save the .psd, then select <strong>File-&gt;Export-&gt;Export As...</strong> and export it as a PNG with the same name as the psd. Make all layers except the email content are hidden in the preview, the background should be transparent.</li>
+	</ol>
+	</li>
+	<li>Copy both the FakeEmail_XXX.png and FakeEmail_Preview_XXX.png files to \assets\single_sprites\Mail ,which is part of the source code for the game. If there's already files with that name there, don't select replace. Give them a new unique name, usually it should just be 1 higher than the highest number mail.</li>
+	<li>Using a code editor of your choice, open \src\scenes\Play.js, located in the source code of the game.
+	<div><span contenteditable="false"><img alt data-preview-src="/sites/IntuitiveE-Learning/Teams Wiki Data/Animation/img-7-2bebeb27925c473383380f0969e0fd5b.png" src="https://secusolutionsca.sharepoint.com/sites/IntuitiveE-Learning/_api/web/getfilebyid(%27e0be4962-077e-4230-907a-3568d4303faf%27)/$value" data-ts-imgid="imge82603a3-0f2f-4d30-8c86-6bbd034724da" data-ts-imglen="84264" height="214" itemtype="http://teams.microsoft.com/WikiImage" style="vertical-align:bottom;" width="730" /></span>
+	<div>There should be a portion of code that looks like this near the beginning of the file. Notice that there is an array called this.unusedMailReal, and an array called this.unusedMailFake. In that is a bunch of lines that start with new Mail(...), Copy one of those lines from the correct fake/real array, and paste it at the bottom of the list, before the close bracket. Update the two file paths in quotation marks to the file paths of the new email, and preview, respectively. If you've been following the guide so far, you should just be able to update the number at the end of each of them. If you are adding a fake email, make sure to update the final 4 true/false things appropriately.
+	<div>
+	<div> </div>
+	</div>
+	</div>
+	</div>
+
+	<ol>
+		<li>
+		<div>
+		<div><strong>Below are what the 4 true/false values correspond to, in order.</strong></div>
+		</div>
+
+		<ol>
+			<li>
+			<div>
+			<div>Sender is posing as someone they aren't</div>
+			</div>
+			</li>
+			<li>
+			<div>
+			<div>Email contains link to a suspicious website</div>
+			</div>
+			</li>
+			<li>
+			<div>
+			<div>Email requests personal info</div>
+			</div>
+			</li>
+			<li>
+			<div>
+			<div>Email contains suspicious attachment.
+			<div><span contenteditable="false"><img alt data-preview-src="/sites/IntuitiveE-Learning/Teams Wiki Data/Animation/img-7-11c474a05e604befa5b0622460205d4b.png" src="https://secusolutionsca.sharepoint.com/sites/IntuitiveE-Learning/_api/web/getfilebyid(%27fdc991e1-02c5-4654-b271-b995ac7b5769%27)/$value" data-ts-imgid="imgc680e9ad-9827-4087-9be8-0d83c15a79ce" data-ts-imglen="162357" itemtype="http://teams.microsoft.com/WikiImage" style="vertical-align:bottom;" /></span>
+			<div> </div>
+			</div>
+
+			<div> </div>
+			</div>
+			</div>
+			</li>
+		</ol>
+		</li>
+	</ol>
+	</li>
+	<li>When you are done, save Play.js, and merge using whatever version control system you are using.</li>
+</ol>
+</p>
+</body></html>
