@@ -2,8 +2,8 @@
 let config =
 {
     type: Phaser.WEBGL,
-    width: 1200,
-    height: 900,
+    width: 800,
+    height: 600,
     zoom: 1,
     antialias: false,
     pixelArt: true,
