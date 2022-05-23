@@ -179,7 +179,10 @@ class Play extends Phaser.Scene {
                 this.emailQueue[0].reason4,
             ));
         this.nextMailInQueue(this.emailQueue);
-        this.hideReportMenu();
+        if(this.reportMenuVisible === true)
+        {
+            this.hideReportMenu();
+        }
     }
     
     confirmReportMail()

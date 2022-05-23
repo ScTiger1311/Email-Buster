@@ -29,7 +29,7 @@ class Pixelroom extends Phaser.Scene {
         this.moneyPerDay = 200; //how much money the player gets per day. 
         this.upgradeCostIncrement = 100; //how much the cost of each successive office upgrade is. Also adds a random number 1-10 for giggles
         this.currentUpgradeCost = 100; //how much the cost is, currently. Also sets the initial cost.
-        this.playerScale = 13; //the scale of the player sprite
+        this.playerScale = 1; //the scale of the player sprite
         this.movespeed = 7; //in pixels per 1/60th of a second
 
         this.anims.create(
@@ -38,7 +38,7 @@ class Pixelroom extends Phaser.Scene {
                 frameRate: 2,
                 frames: this.anims.generateFrameNames( "Arrow",
                 {
-                    prefix: "Arrow_0",
+                    prefix: "Arrow_",
                     start: 1,
                     end: 2,
                     first: 1,

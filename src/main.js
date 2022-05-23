@@ -2,11 +2,11 @@
 let config =
 {
     type: Phaser.WEBGL,
-    width: 800,
-    height: 600,
-    zoom: 1,
-    antialias: false,
-    pixelArt: true,
+    width: 1200,
+    height: 900,
+    zoom: .5,
+    antialias: true,
+    pixelArt: false,
     scene: [Pixelroom, Play], //if you plan on using more scenes than are already here, make sure you add the name of the scene to this list.
     physics:{
         default: 'arcade',
