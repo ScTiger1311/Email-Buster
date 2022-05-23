@@ -4,7 +4,7 @@ let config =
     type: Phaser.WEBGL,
     width: 1200,
     height: 900,
-    zoom: .7,
+    zoom: 1,
     antialias: true,
     pixelArt: false,
     scene: [Pixelroom, Play], //if you plan on using more scenes than are already here, make sure you add the name of the scene to this list.
