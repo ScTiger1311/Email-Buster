@@ -40,7 +40,7 @@
 	</li>
 	<li>Copy both the FakeEmail_XXX.png and FakeEmail_Preview_XXX.png files to \assets\single_sprites\Mail ,which is part of the source code for the game. If there's already files with that name there, don't select replace. Give them a new unique name, usually it should just be 1 higher than the highest number mail.</li>
 	<li>Using a code editor of your choice, open \src\scenes\Play.js, located in the source code of the game.
-	<div><img src="/assets/wiki/mailarray.png" height="214" width="730"><div>
+	<div><img src="./assets/wiki/mailarray.png" height="214" width="730"><div>
 	<div>There should be a portion of code that looks like this near the beginning of the file. Notice that there is an array called this.unusedMailReal, and an array called this.unusedMailFake. In that is a bunch of lines that start with new Mail(...), Copy one of those lines from the correct fake/real array, and paste it at the bottom of the list, before the close bracket. Update the two file paths in quotation marks to the file paths of the new email, and preview, respectively. If you've been following the guide so far, you should just be able to update the number at the end of each of them. If you are adding a fake email, make sure to update the final 4 true/false things appropriately.
 	<div>
 	<div> </div>
@@ -73,8 +73,7 @@
 			<li>
 			<div>
 			<div>Email contains suspicious attachment.
-		    <div><img src="/assets/wiki/truefalsevals.png" height="214" width="730"><div>
-			<div><span contenteditable="false"><img alt data-preview-src="/sites/IntuitiveE-Learning/Teams Wiki Data/Animation/img-7-11c474a05e604befa5b0622460205d4b.png" src="https://secusolutionsca.sharepoint.com/sites/IntuitiveE-Learning/_api/web/getfilebyid(%27fdc991e1-02c5-4654-b271-b995ac7b5769%27)/$value" data-ts-imgid="imgc680e9ad-9827-4087-9be8-0d83c15a79ce" data-ts-imglen="162357" itemtype="http://teams.microsoft.com/WikiImage" style="vertical-align:bottom;" /></span>
+		    <div><img src="./assets/wiki/truefalsevals.png" height="214" width="730"><div>
 			<div> </div>
 			</div>
 
